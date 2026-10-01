@@ -98,6 +98,7 @@ Write one entry per non-obvious lesson: what went wrong, why, and the rule/guard
 <!-- harness:history:start -->
 | When | Label | Result | Mistakes |
 |------|-------|--------|----------|
+| 2026-10-01T05:20:48Z | kotlin core: dashboard presenter | ✅ green | - |
 | 2026-10-01T05:18:38Z | full: after kotlin core | ✅ green | - |
 | 2026-10-01T05:17:58Z | kotlin core: first implementation | ✅ green | - |
 | 2026-10-01T05:08:19Z | server: member reference validation | ✅ green | - |

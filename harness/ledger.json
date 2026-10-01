@@ -175,6 +175,15 @@
         "android-app": "skip"
       },
       "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:20:48Z",
+      "label": "kotlin core: dashboard presenter",
+      "ok": true,
+      "checks": {
+        "kotlin-core-test": "pass"
+      },
+      "mistakes": []
     }
   ],
   "loops": []
