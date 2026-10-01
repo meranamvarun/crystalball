@@ -93,7 +93,10 @@ class DashboardTest {
         val fam = Dashboard.reports(input, Scope.Family, Range.MONTH)
         assertEquals(7, fam.categories.size)
         assertEquals("52%", fam.categories[0].pctLabel)
-        assertEquals(listOf(MemberRow("You", "₹6,229", "Shopping"), MemberRow("Priya", "₹3,980", "Shopping"), MemberRow("Aarav", "₹150", "Dining")), fam.members)
+        assertEquals(
+            listOf(MemberRow("You", "₹6,229", "Shopping"), MemberRow("Priya", "₹3,980", "Shopping"), MemberRow("Aarav", "₹150", "Dining")),
+            fam.members,
+        )
         assertTrue(Dashboard.reports(input, Scope.Member("m_you"), Range.MONTH).members.isEmpty())
     }
 
@@ -147,7 +150,11 @@ class DashboardTest {
 
     @Test
     fun syncRowsUseRelativeTimes() {
-        val status = SyncStatus(now, listOf(MemberSync("m_you", "You", now - 10_000), MemberSync("m_aarav", "Aarav", now - 3 * 3_600_000), MemberSync("m_x", "New", null)))
+        val status =
+            SyncStatus(
+                now,
+                listOf(MemberSync("m_you", "You", now - 10_000), MemberSync("m_aarav", "Aarav", now - 3 * 3_600_000), MemberSync("m_x", "New", null)),
+            )
         val rows = Dashboard.syncRows(status, onlineWithinMs = 15 * 60_000)
         assertEquals(SyncRow("Y", "You", "Synced just now", true), rows[0])
         assertEquals(SyncRow("A", "Aarav", "Last synced 3h ago", false), rows[1])

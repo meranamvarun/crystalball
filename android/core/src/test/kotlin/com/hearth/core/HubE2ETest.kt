@@ -39,7 +39,12 @@ class HubE2ETest {
 
         ingest(phoneA, you.memberId, "Sent Rs.649.00\nFrom HDFC Bank A/C *1234\nTo Netflix\nOn 25/09/26\nRef 627312345678", at("2026-09-25T08:00"))
         ingest(phoneA, you.memberId, "Rs 1,840.00 debited from A/c no. XX1234 on 29-09-26 at BIG BAZAAR. Avl Bal Rs 45,210.55", at("2026-09-29T10:00"))
-        ingest(phoneA, you.memberId, "Dear UPI user A/C X4521 debited by 850.0 on date 26Sep26 trf to PAYTM-XYZTRD4521 Refno 626912345678.", at("2026-09-26T13:00"))
+        ingest(
+            phoneA,
+            you.memberId,
+            "Dear UPI user A/C X4521 debited by 850.0 on date 26Sep26 trf to PAYTM-XYZTRD4521 Refno 626912345678.",
+            at("2026-09-26T13:00"),
+        )
         // Joint account: the same bank event lands on both phones.
         val joint = "INR 780.00 spent using ICICI Bank Card XX4521 on 29-Sep-26 on ZOMATO. Avl Limit: INR 1,23,456.78."
         ingest(phoneA, you.memberId, joint, at("2026-09-29T20:11"))
@@ -60,7 +65,10 @@ class HubE2ETest {
 
         val ledgerA = Ledger.fromRecords(phoneA.records())
         assertEquals("Groceries", ledgerA.transactions.first { it.merchant == "PAYTM-XYZTRD4521" }.category)
-        assertEquals("Groceries", Categorizer(CategoryConfig.default(), emptyMap()).withLearned(ledgerA.categoryRules).categorize("PAYTM-XYZTRD4521", Direction.DEBIT))
+        assertEquals(
+            "Groceries",
+            Categorizer(CategoryConfig.default(), emptyMap()).withLearned(ledgerA.categoryRules).categorize("PAYTM-XYZTRD4521", Direction.DEBIT),
+        )
 
         // Kotlin (phone) and Rust (hub) compute the same family report from the same records.
         val local = HearthJson.encodeToJsonElement(spendReport(ledgerA.transactions, Scope.Family, Range.MONTH, anchor, tz)).jsonObject

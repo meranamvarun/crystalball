@@ -54,7 +54,14 @@ class IngestTest {
 
     @Test
     fun recategorizeBumpsHlcAndTeachesFamilyRule() {
-        val (record, clock) = ingestSms("AD-SBIUPI", "Dear UPI user A/C X4521 debited by 850.0 on date 26Sep26 trf to PAYTM-XYZTRD4521 Refno 626912345678.", 1_000, "m_you", categorizer, Hlc(0, 0, "a"))!!
+        val (record, clock) = ingestSms(
+            "AD-SBIUPI",
+            "Dear UPI user A/C X4521 debited by 850.0 on date 26Sep26 trf to PAYTM-XYZTRD4521 Refno 626912345678.",
+            1_000,
+            "m_you",
+            categorizer,
+            Hlc(0, 0, "a"),
+        )!!
         assertNull(fromRecord<Transaction>(record).category)
         val (updated, rule, after) = recategorize(record, "Groceries", nowMs = 500, clock = clock)
         assertTrue(updated.hlc > record.hlc, "edit must win LWW against the original")
@@ -78,6 +85,19 @@ class FormatTest {
         assertEquals("₹1,00,00,000", formatInr(1_000_000_000))
         assertEquals("-₹2,150", formatInr(-215_000))
         assertEquals("₹650", formatInr(64_950)) // rounds half away from zero to whole rupees
+    }
+
+    @Test
+    fun parsesTypedRupeesToPaise() {
+        assertEquals(12_000_000L, parseInrToMinor("1,20,000"))
+        assertEquals(64_950L, parseInrToMinor("649.5"))
+        assertEquals(215_000L, parseInrToMinor(" ₹ 2,150.00 "))
+        assertEquals(100L, parseInrToMinor("Rs 1"))
+        assertNull(parseInrToMinor(""))
+        assertNull(parseInrToMinor("abc"))
+        assertNull(parseInrToMinor("-5"))
+        assertNull(parseInrToMinor("1.234"))
+        assertNull(parseInrToMinor("99999999999999999999"))
     }
 
     @Test

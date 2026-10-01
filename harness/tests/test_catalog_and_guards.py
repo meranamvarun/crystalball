@@ -57,6 +57,32 @@ class ClassifyTest(unittest.TestCase):
             self.assertTrue(m.rule, m.id)
 
 
+class RepoGuardsTest(unittest.TestCase):
+    """The shipped guards must catch the real mistake and not innocent code."""
+
+    def hits(self, rel, line):
+        catalog = load_catalog(REPO_ROOT / "harness" / "mistakes.json")
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / rel
+            path.parent.mkdir(parents=True)
+            path.write_text(line + "\n")
+            return [h.mistake_id for h in scan(Path(d), catalog)]
+
+    def test_sms_body_logging_is_caught(self):
+        rel = "android/app/src/main/kotlin/X.kt"
+        self.assertIn("SMS-BODY-LOGGED", self.hits(rel, 'Log.d(TAG, "got $body")'))
+        self.assertIn("SMS-BODY-LOGGED", self.hits(rel, 'Log.i(TAG, "x ${msg.messageBody}")'))
+        self.assertIn("SMS-BODY-LOGGED", self.hits(rel, 'Log.w(TAG, text)'))
+
+    def test_logging_counts_about_sms_is_fine(self):
+        rel = "android/app/src/main/kotlin/X.kt"
+        self.assertEqual([], self.hits(rel, 'Log.i(TAG, "sms parsed: transactions=$recorded")'))
+
+    def test_money_float_guard(self):
+        self.assertIn("MONEY-FLOAT", self.hits("backend/crates/x/src/a.rs", "pub amount_minor: f64,"))
+        self.assertEqual([], self.hits("backend/crates/x/src/a.rs", "pub amount_minor: i64,"))
+
+
 class GuardScanTest(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()

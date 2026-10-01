@@ -210,7 +210,13 @@ object Dashboard {
             netWorthLabel = formatInr(s.netWorthMinor),
             netWorthTrend = s.networthTrend.map { percent(it.valueMinor, maxNw).toInt() },
             goals = s.goals.map {
-                GoalRow(it.name, it.pct.toInt(), formatInr(it.savedMinor), formatInr(it.targetMinor), YearMonth.parse(it.targetMonth).atDay(1).format(MONTH_YEAR))
+                GoalRow(
+                    it.name,
+                    it.pct.toInt(),
+                    formatInr(it.savedMinor),
+                    formatInr(it.targetMinor),
+                    YearMonth.parse(it.targetMonth).atDay(1).format(MONTH_YEAR),
+                )
             },
         )
     }

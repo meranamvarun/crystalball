@@ -92,7 +92,7 @@
       "guards": [
         {
           "glob": "android/app/src/main/**/*.kt",
-          "regex": "Log\\.[dviwe]\\(.*\\b(body|messageBody|sms)\\b"
+          "regex": "(Log\\.[dviwe]|println|print)\\(.*(\\$\\{?[\\w.]*\\b(body|messageBody|text)\\b|,\\s*[\\w.]*\\b(body|messageBody|text)\\s*\\))"
         }
       ]
     },
@@ -286,6 +286,19 @@
       "checks": [
         "rust-clippy",
         "rust-test"
+      ]
+    },
+    {
+      "id": "KOTLIN-STYLE",
+      "title": "Kotlin code not ktlint-clean (or not parseable)",
+      "rule": "Kotlin in android/ must pass `./gradlew ktlintCheck` (it also proves :app parses where the SDK is missing). Run `./gradlew ktlintFormat` after editing Kotlin.",
+      "fix": "cd android && ./gradlew ktlintFormat",
+      "patterns": [
+        "\\(standard:[a-z-]+\\)",
+        "Not a valid Kotlin file"
+      ],
+      "checks": [
+        "kotlin-lint"
       ]
     }
   ]

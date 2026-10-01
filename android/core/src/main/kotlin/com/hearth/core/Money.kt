@@ -62,3 +62,14 @@ fun syncedAgo(lastMs: Long?, nowMs: Long): String {
         else -> "${s / 86_400}d ago"
     }
 }
+
+private val TYPED_AMOUNT = Regex("^(?:₹|rs\\.?|inr)?\\s*([0-9][0-9,]*)(?:\\.([0-9]{1,2}))?$", RegexOption.IGNORE_CASE)
+
+/** Parse what a person types ("1,20,000", "649.5", "₹2,150.00") into paise; null if invalid. */
+fun parseInrToMinor(text: String): Long? {
+    val m = TYPED_AMOUNT.matchEntire(text.trim()) ?: return null
+    val rupees = m.groupValues[1].replace(",", "").toLongOrNull() ?: return null
+    val paise = m.groupValues[2].padEnd(2, '0').toLong()
+    if (rupees > Long.MAX_VALUE / 100 - 1) return null
+    return rupees * 100 + paise
+}

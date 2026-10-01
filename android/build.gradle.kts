@@ -27,3 +27,30 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.kotlin.compose) apply false
 }
+
+// ---- ktlint: parses + style-checks every Kotlin file, including :app (needs no Android SDK) ----
+val ktlint: Configuration by configurations.creating
+
+dependencies {
+    ktlint("com.pinterest.ktlint:ktlint-cli:1.5.0") {
+        attributes { attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL)) }
+    }
+}
+
+val kotlinSources = listOf("core/src/**/*.kt", "app/src/**/*.kt", "**/*.kts", "!**/build/**")
+
+tasks.register<JavaExec>("ktlintCheck") {
+    group = "verification"
+    description = "Parse and style-check all Kotlin sources (core and app)."
+    classpath = ktlint
+    mainClass.set("com.pinterest.ktlint.Main")
+    args(kotlinSources)
+}
+
+tasks.register<JavaExec>("ktlintFormat") {
+    group = "formatting"
+    description = "Auto-format all Kotlin sources."
+    classpath = ktlint
+    mainClass.set("com.pinterest.ktlint.Main")
+    args(listOf("-F") + kotlinSources)
+}

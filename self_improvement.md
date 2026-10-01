@@ -30,6 +30,24 @@ Write one entry per non-obvious lesson: what went wrong, why, and the rule/guard
 
 <!-- Add newest lessons at the top. -->
 
+### 2026-10-01 · Code that can't be compiled here still needs a machine check
+- **Situation:** the Android SDK / Google Maven (`dl.google.com`) is blocked in this environment,
+  so `:app` cannot be compiled; the `android-app` check is honestly reported as SKIPPED.
+- **Mitigations:** (1) all logic the app shows lives in the tested pure `core` (`Dashboard`
+  presenter, `SyncEngine`, `HubClient`, parsing); (2) new `kotlin-lint` check runs ktlint over
+  `core` *and* `app`, which proves every file parses (227 style findings on first run, mostly
+  argument wrapping — fixed by the `ktlintFormat` autofix, catalog entry `KOTLIN-STYLE`);
+  (3) plugin/library versions were checked against Maven Central where reachable.
+- **Still unverified:** Android API usage/type-checking in `:app`. Run
+  `python3 harness/hearth.py check` on a machine with `ANDROID_HOME` to close this gap.
+
+### 2026-10-01 · A guard that matches words instead of the mistake is noise
+- **What happened:** `SMS-BODY-LOGGED` flagged `Log.i(TAG, "sms parsed: transactions=$n")` because
+  the regex matched the word "sms" in a literal (caught in a `--no-record` run, so not in the ledger).
+- **Fix:** the guard now targets interpolated/passed body variables (`$body`, `${m.messageBody}`,
+  `Log.w(TAG, text)`); `RepoGuardsTest` pins both the catch and the non-catch. Never paper over a
+  false positive with `harness:allow`.
+
 ### 2026-10-01 · Contract tests prove each stack alone; an E2E proves they talk
 - **Gap:** both stacks passed the same fixtures, but nothing exercised the real wire protocol.
 - **Added:** `harness/e2e.py` (check `e2e`) builds and starts the Rust hub, runs the Kotlin
@@ -106,6 +124,10 @@ Write one entry per non-obvious lesson: what went wrong, why, and the rule/guard
 <!-- harness:history:start -->
 | When | Label | Result | Mistakes |
 |------|-------|--------|----------|
+| 2026-10-01T05:35:29Z | stop-hook | ✅ green | - |
+| 2026-10-01T05:33:21Z | full: android app + ktlint | ✅ green | - |
+| 2026-10-01T05:31:46Z | guards: precise SMS logging guard | ✅ green | - |
+| 2026-10-01T05:28:36Z | kotlin core: rupee parsing | ✅ green | - |
 | 2026-10-01T05:24:45Z | sync engine + cross-stack e2e | ✅ green | - |
 | 2026-10-01T05:23:00Z | kotlin core: protocol DTOs | ✅ green | - |
 | 2026-10-01T05:20:48Z | kotlin core: dashboard presenter | ✅ green | - |
@@ -117,10 +139,6 @@ Write one entry per non-obvious lesson: what went wrong, why, and the rule/guard
 | 2026-10-01T05:07:49Z | server: lint with autofix (before autofix) | ❌ red | RUST-FMT |
 | 2026-10-01T05:07:00Z | server: lint | ❌ red | RUST-FMT |
 | 2026-10-01T05:06:52Z | server: clap env feature | ✅ green | - |
-| 2026-10-01T05:06:24Z | server: first implementation | ❌ red | RUST-TYPE |
-| 2026-10-01T05:03:26Z | core: lint after fmt | ✅ green | - |
-| 2026-10-01T05:02:40Z | core: lint | ❌ red | RUST-FMT |
-| 2026-10-01T05:02:12Z | core: first implementation | ✅ green | - |
 <!-- harness:history:end -->
 
 ## Generation loops (generated)

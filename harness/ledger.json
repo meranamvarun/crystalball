@@ -22,6 +22,7 @@
     "guards": [],
     "harness-tests": [],
     "kotlin-core-test": [],
+    "kotlin-lint": [],
     "rust-clippy": [],
     "rust-fmt": [],
     "rust-test": []
@@ -202,6 +203,54 @@
       "checks": {
         "kotlin-core-test": "pass",
         "e2e": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:28:36Z",
+      "label": "kotlin core: rupee parsing",
+      "ok": true,
+      "checks": {
+        "kotlin-core-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:31:46Z",
+      "label": "guards: precise SMS logging guard",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:33:21Z",
+      "label": "full: android app + ktlint",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass",
+        "rust-fmt": "pass",
+        "rust-clippy": "pass",
+        "rust-test": "pass",
+        "kotlin-core-test": "pass",
+        "kotlin-lint": "pass",
+        "android-app": "skip",
+        "e2e": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:35:29Z",
+      "label": "stop-hook",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass",
+        "kotlin-core-test": "pass",
+        "kotlin-lint": "pass"
       },
       "mistakes": []
     }

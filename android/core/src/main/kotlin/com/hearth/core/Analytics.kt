@@ -41,10 +41,11 @@ fun monthlyTrend(txns: List<Transaction>, scope: Scope, anchor: LocalDate, month
     }
 }
 
-private fun Budget.inScope(scope: Scope): Boolean = !deleted && when (scope) {
-    Scope.Family -> memberId == null
-    is Scope.Member -> memberId == scope.memberId
-}
+private fun Budget.inScope(scope: Scope): Boolean = !deleted &&
+    when (scope) {
+        Scope.Family -> memberId == null
+        is Scope.Member -> memberId == scope.memberId
+    }
 
 /** Monthly budgets of the scope against the anchor month's spend, sorted by category. */
 fun budgetStatus(txns: List<Transaction>, budgets: List<Budget>, scope: Scope, anchor: LocalDate, tz: Int): List<BudgetStatus> {
@@ -63,8 +64,11 @@ fun anomalies(txns: List<Transaction>, scope: Scope, anchor: LocalDate, tz: Int)
         .mapNotNull { t ->
             val category = t.category ?: return@mapNotNull null
             val baseline = txns.filter {
-                it.isSpend && scope.includes(it) && it.category == category &&
-                    it.occurredAtMs < t.occurredAtMs && it.occurredAtMs >= t.occurredAtMs - ANOMALY_WINDOW_MS
+                it.isSpend &&
+                    scope.includes(it) &&
+                    it.category == category &&
+                    it.occurredAtMs < t.occurredAtMs &&
+                    it.occurredAtMs >= t.occurredAtMs - ANOMALY_WINDOW_MS
             }
             val count = baseline.size
             val sum = baseline.sumOf { it.amountMinor }

@@ -21,8 +21,11 @@ object Entities {
 
 @Serializable
 enum class Direction {
-    @SerialName("debit") DEBIT,
-    @SerialName("credit") CREDIT,
+    @SerialName("debit")
+    DEBIT,
+
+    @SerialName("credit")
+    CREDIT,
 }
 
 @Serializable
@@ -54,9 +57,14 @@ data class Budget(
 
 @Serializable
 enum class BillKind {
-    @SerialName("recurring") RECURRING,
-    @SerialName("variable") VARIABLE,
-    @SerialName("autopay") AUTOPAY,
+    @SerialName("recurring")
+    RECURRING,
+
+    @SerialName("variable")
+    VARIABLE,
+
+    @SerialName("autopay")
+    AUTOPAY,
 }
 
 @Serializable
@@ -71,12 +79,23 @@ data class Bill(
 
 @Serializable
 enum class AssetClass(val wire: String) {
-    @SerialName("equity") EQUITY("equity"),
-    @SerialName("mutual_fund") MUTUAL_FUND("mutual_fund"),
-    @SerialName("fd") FD("fd"),
-    @SerialName("gold") GOLD("gold"),
-    @SerialName("cash") CASH("cash"),
-    @SerialName("other") OTHER("other"),
+    @SerialName("equity")
+    EQUITY("equity"),
+
+    @SerialName("mutual_fund")
+    MUTUAL_FUND("mutual_fund"),
+
+    @SerialName("fd")
+    FD("fd"),
+
+    @SerialName("gold")
+    GOLD("gold"),
+
+    @SerialName("cash")
+    CASH("cash"),
+
+    @SerialName("other")
+    OTHER("other"),
 }
 
 @Serializable

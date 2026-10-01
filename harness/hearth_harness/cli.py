@@ -123,13 +123,16 @@ def cmd_loop(args) -> int:
 
     def round_verify() -> list[CheckResult]:
         return verify(fast=False, changed=None if args.full else relevant_changes(), only=only,
-                      label=f"loop: {args.task[:40]}", autofix=True)
+                      label=f"loop: {args.task[:40]}", autofix=True, record=not args.dry_run)
 
     result = run_loop(args.task, agent, round_verify, catalog,
                       max_iter=args.max_iter or settings["max_iter"],
                       on_round=lambda i, rs: print(f"round {i}: "
                                                    + ("green" if all(r.status != "fail" for r in rs)
                                                       else "red"), file=sys.stderr))
+    if args.dry_run:
+        print(f"dry run: {result.iterations} round(s), {'green' if result.success else 'red'}; nothing recorded")
+        return 0 if result.success else 1
     ledger = Ledger.load(HARNESS / "ledger.json")
     ledger.record_loop(args.task, result.success, result.iterations,
                        [m for rnd in result.rounds for r in rnd for m in r.mistakes], now=now_iso())

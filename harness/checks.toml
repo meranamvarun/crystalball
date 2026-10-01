@@ -57,6 +57,15 @@ cwd = "android"
 requires = ["tool:java"]
 
 [[check]]
+name = "kotlin-lint"
+component = "android-core"
+paths = ["android/"]
+cmd = ["./gradlew", "--console=plain", "ktlintCheck"]
+fix = ["./gradlew", "--console=plain", "ktlintFormat"]
+cwd = "android"
+requires = ["tool:java"]
+
+[[check]]
 name = "android-app"
 component = "android-app"
 paths = ["android/"]

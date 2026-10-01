@@ -24,7 +24,11 @@ private class FakeHub : Hub {
 
 class SyncEngineTest {
     private fun txn(id: String, hlc: String, amount: Long) = SyncRecord(
-        Entities.TRANSACTION, id, hlc, false, "m1",
+        Entities.TRANSACTION,
+        id,
+        hlc,
+        false,
+        "m1",
         JsonObject(mapOf("amount_minor" to JsonPrimitive(amount))),
     )
 
