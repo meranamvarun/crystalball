@@ -1,0 +1,164 @@
+{
+ "description": "Default categorization (consumed by android/core; served by the hub). Merchant key = uppercase, every non-alphanumeric run -> one space, trimmed. A keyword matches when it is a prefix of a word sequence in the key (' '+key contains ' '+keyword). Rules are tried in order; first match wins. Credits are always 'Income'. A learned family rule (category_rule records, keyed by merchant key) beats the defaults.",
+ "categories": [
+  "Groceries",
+  "Dining",
+  "Transport",
+  "Bills & Utilities",
+  "Shopping",
+  "Entertainment",
+  "Health",
+  "Education",
+  "Housing",
+  "Investments",
+  "Cash",
+  "Income"
+ ],
+ "rules": [
+  {
+   "category": "Entertainment",
+   "keywords": [
+    "AMAZON PRIME",
+    "PRIME VIDEO",
+    "NETFLIX",
+    "HOTSTAR",
+    "SPOTIFY",
+    "BOOKMYSHOW",
+    "PVR",
+    "INOX",
+    "YOUTUBE"
+   ]
+  },
+  {
+   "category": "Dining",
+   "keywords": [
+    "UBER EATS",
+    "ZOMATO",
+    "SWIGGY",
+    "DOMINOS",
+    "MCDONALD",
+    "STARBUCKS",
+    "KFC",
+    "CAFE",
+    "RESTAURANT",
+    "CANTEEN",
+    "PIZZA"
+   ]
+  },
+  {
+   "category": "Groceries",
+   "keywords": [
+    "BIG BAZAAR",
+    "BIGBAZAAR",
+    "DMART",
+    "RELIANCE FRESH",
+    "MORE RETAIL",
+    "BLINKIT",
+    "ZEPTO",
+    "BIGBASKET",
+    "NATURES BASKET",
+    "SPENCER"
+   ]
+  },
+  {
+   "category": "Transport",
+   "keywords": [
+    "UBER",
+    "OLA",
+    "RAPIDO",
+    "IRCTC",
+    "METRO",
+    "FASTAG",
+    "INDIAN OIL",
+    "IOCL",
+    "HPCL",
+    "BPCL",
+    "PETROL",
+    "SHELL"
+   ]
+  },
+  {
+   "category": "Bills & Utilities",
+   "keywords": [
+    "ELECTRICITY",
+    "BESCOM",
+    "TATA POWER",
+    "AIRTEL",
+    "JIO",
+    "VODAFONE",
+    "BSNL",
+    "BROADBAND",
+    "RECHARGE",
+    "GAS",
+    "WATER"
+   ]
+  },
+  {
+   "category": "Shopping",
+   "keywords": [
+    "AMAZON",
+    "FLIPKART",
+    "MYNTRA",
+    "AJIO",
+    "NYKAA",
+    "MEESHO",
+    "TATA CLIQ",
+    "DECATHLON",
+    "IKEA"
+   ]
+  },
+  {
+   "category": "Health",
+   "keywords": [
+    "APOLLO",
+    "PHARMACY",
+    "PHARMEASY",
+    "1MG",
+    "NETMEDS",
+    "HOSPITAL",
+    "CLINIC",
+    "MEDPLUS",
+    "PRACTO"
+   ]
+  },
+  {
+   "category": "Education",
+   "keywords": [
+    "SCHOOL FEE",
+    "BYJU",
+    "UNACADEMY",
+    "COURSERA",
+    "UDEMY",
+    "COLLEGE",
+    "TUITION"
+   ]
+  },
+  {
+   "category": "Housing",
+   "keywords": [
+    "RENT",
+    "NOBROKER",
+    "MAINTENANCE",
+    "HOME LOAN"
+   ]
+  },
+  {
+   "category": "Investments",
+   "keywords": [
+    "ZERODHA",
+    "GROWW",
+    "UPSTOX",
+    "MUTUAL FUND",
+    "KUVERA",
+    "NPS",
+    "PPF"
+   ]
+  },
+  {
+   "category": "Cash",
+   "keywords": [
+    "ATM"
+   ]
+  }
+ ]
+}

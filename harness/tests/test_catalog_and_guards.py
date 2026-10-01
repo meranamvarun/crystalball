@@ -30,6 +30,24 @@ class ClassifyTest(unittest.TestCase):
         catalog = [mistake("A", [r"^FAILED$"])]
         self.assertEqual(classify("ok\nFAILED\n", catalog), ["A"])
 
+    def test_ansi_colour_codes_are_ignored(self):
+        catalog = [mistake("RUST-FMT", [r"^Diff in "])]
+        self.assertEqual(classify("\x1b[1mDiff in\x1b[0m a.rs", catalog), ["RUST-FMT"])
+
+    def test_mistake_scoped_to_checks_only_matches_those_checks(self):
+        m = mistake("CONTRACT-DRIFT", [r"contract case"])
+        m.checks = ["rust-test"]
+        self.assertEqual(classify("contract case 'x' failed", [m], check="rust-fmt"), [])
+        self.assertEqual(classify("contract case 'x' failed", [m], check="rust-test"), ["CONTRACT-DRIFT"])
+        self.assertEqual(classify("contract case 'x' failed", [m]), ["CONTRACT-DRIFT"])
+
+    def test_repo_catalog_contract_drift_ignores_source_literals(self):
+        catalog = load_catalog(REPO_ROOT / "harness" / "mistakes.json")
+        diff = 'Diff in contracts.rs:\n-        "contract case \'trend {}\' failed",'
+        self.assertNotIn("CONTRACT-DRIFT", classify(diff, catalog, check="rust-test"))
+        panic = "assertion `left == right` failed: contract case 'family month' failed\n  left: 1"
+        self.assertIn("CONTRACT-DRIFT", classify(panic, catalog, check="rust-test"))
+
     def test_repo_catalog_loads_and_has_unique_ids(self):
         catalog = load_catalog(REPO_ROOT / "harness" / "mistakes.json")
         ids = [m.id for m in catalog]

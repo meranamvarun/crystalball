@@ -10,7 +10,7 @@ import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .catalog import Mistake, classify
+from .catalog import ANSI, Mistake, classify
 from .guards import scan
 from .ledger import CheckResult
 
@@ -104,9 +104,10 @@ def run_check(check: Check, root: Path, catalog: list[Mistake], env: dict | None
     except FileNotFoundError as e:
         output, code = f"command not found: {e}", 127
     duration = time.monotonic() - start
+    output = ANSI.sub("", output)
     if code == 0:
         return CheckResult(check.name, "pass", duration_s=duration)
-    return CheckResult(check.name, "fail", mistakes=classify(output, catalog),
+    return CheckResult(check.name, "fail", mistakes=classify(output, catalog, check.name),
                        output_tail=output[-TAIL_CHARS:], duration_s=duration)
 
 

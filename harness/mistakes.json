@@ -7,8 +7,14 @@
       "fix": "Change the type to i64/Long `*_minor` and format only at the UI edge (formatInr).",
       "patterns": [],
       "guards": [
-        {"glob": "backend/**/*.rs", "regex": "(amount|total|cap|value|price|balance|invested|target|current)\\w*\\s*:\\s*f(32|64)"},
-        {"glob": "android/**/*.kt", "regex": "(amount|total|cap|value|price|balance|invested|target|current)\\w*\\s*:\\s*(Double|Float)\\b"}
+        {
+          "glob": "backend/**/*.rs",
+          "regex": "(amount|total|cap|value|price|balance|invested|target|current)\\w*\\s*:\\s*f(32|64)"
+        },
+        {
+          "glob": "android/**/*.kt",
+          "regex": "(amount|total|cap|value|price|balance|invested|target|current)\\w*\\s*:\\s*(Double|Float)\\b"
+        }
       ]
     },
     {
@@ -18,8 +24,15 @@
       "fix": "Add a `now: i64` (epoch millis) or `anchor: NaiveDate/LocalDate` parameter and supply it from the server/app layer.",
       "patterns": [],
       "guards": [
-        {"glob": "backend/crates/hearth-core/src/**/*.rs", "regex": "(Utc::now|Local::now|SystemTime::now)\\(", "stop_at": "#[cfg(test)]"},
-        {"glob": "android/core/src/main/**/*.kt", "regex": "(System\\.currentTimeMillis|Instant\\.now|LocalDate\\.now|LocalDateTime\\.now|ZonedDateTime\\.now)\\("}
+        {
+          "glob": "backend/crates/hearth-core/src/**/*.rs",
+          "regex": "(Utc::now|Local::now|SystemTime::now)\\(",
+          "stop_at": "#[cfg(test)]"
+        },
+        {
+          "glob": "android/core/src/main/**/*.kt",
+          "regex": "(System\\.currentTimeMillis|Instant\\.now|LocalDate\\.now|LocalDateTime\\.now|ZonedDateTime\\.now)\\("
+        }
       ]
     },
     {
@@ -29,8 +42,14 @@
       "fix": "Replace the interpolated value with a `?N` placeholder and pass it in params![].",
       "patterns": [],
       "guards": [
-        {"glob": "backend/**/*.rs", "regex": "format!\\(\\s*\"[^\"]*\\b(SELECT|INSERT|UPDATE|DELETE)\\b"},
-        {"glob": "android/**/*.kt", "regex": "\"[^\"]*\\b(SELECT|INSERT|UPDATE|DELETE)\\b[^\"]*\\$\\{?[a-zA-Z]"}
+        {
+          "glob": "backend/**/*.rs",
+          "regex": "format!\\(\\s*\"[^\"]*\\b(SELECT|INSERT|UPDATE|DELETE)\\b"
+        },
+        {
+          "glob": "android/**/*.kt",
+          "regex": "\"[^\"]*\\b(SELECT|INSERT|UPDATE|DELETE)\\b[^\"]*\\$\\{?[a-zA-Z]"
+        }
       ]
     },
     {
@@ -40,7 +59,14 @@
       "fix": "Use `?` with `ApiError` (From impls exist for rusqlite/serde errors).",
       "patterns": [],
       "guards": [
-        {"glob": "backend/crates/hearth-server/src/**/*.rs", "regex": "\\.(unwrap|expect)\\(", "stop_at": "#[cfg(test)]", "exclude": ["backend/crates/hearth-server/src/main.rs"]}
+        {
+          "glob": "backend/crates/hearth-server/src/**/*.rs",
+          "regex": "\\.(unwrap|expect)\\(",
+          "stop_at": "#[cfg(test)]",
+          "exclude": [
+            "backend/crates/hearth-server/src/main.rs"
+          ]
+        }
       ]
     },
     {
@@ -50,7 +76,10 @@
       "fix": "Log only the parse outcome (e.g. `parsed=true merchant=...`).",
       "patterns": [],
       "guards": [
-        {"glob": "android/app/src/main/**/*.kt", "regex": "Log\\.[dviwe]\\(.*\\b(body|messageBody|sms)\\b"}
+        {
+          "glob": "android/app/src/main/**/*.kt",
+          "regex": "Log\\.[dviwe]\\(.*\\b(body|messageBody|sms)\\b"
+        }
       ]
     },
     {
@@ -58,91 +87,174 @@
       "title": "Rust code not formatted with rustfmt",
       "rule": "Run `cargo fmt --all` (in backend/) after editing Rust.",
       "fix": "cd backend && cargo fmt --all",
-      "patterns": ["^Diff in .*\\.rs"]
+      "patterns": [
+        "^Diff in .*\\.rs"
+      ],
+      "checks": [
+        "rust-fmt"
+      ]
     },
     {
       "id": "RUST-UNUSED",
       "title": "Unused import/variable/function (clippy -D warnings)",
       "rule": "Remove unused imports, variables and dead code before finishing; prefix intentionally unused bindings with `_`.",
       "fix": "Delete the unused item or use it.",
-      "patterns": ["(warning|error): unused (import|variable|mut|result)", "(warning|error): (function|method|struct|field|constant|associated function) .* is never (used|read|constructed)"]
+      "patterns": [
+        "(warning|error): unused (import|variable|mut|result)",
+        "(warning|error): (function|method|struct|field|constant|associated function) .* is never (used|read|constructed)"
+      ],
+      "checks": [
+        "rust-clippy",
+        "rust-test"
+      ]
     },
     {
       "id": "RUST-CLIPPY-LINT",
       "title": "Clippy lint violation",
       "rule": "Write idiomatic Rust that passes `cargo clippy --all-targets -- -D warnings` (needless borrows, redundant clones, manual impls, etc.).",
       "fix": "Apply the suggestion printed under `help:`.",
-      "patterns": ["error: .*\\n(.*\\n){0,12}.*= help: for further information visit https://rust-lang.github.io/rust-clippy"]
+      "patterns": [
+        "error: .*\\n(.*\\n){0,12}.*= help: for further information visit https://rust-lang.github.io/rust-clippy"
+      ],
+      "checks": [
+        "rust-clippy"
+      ]
     },
     {
       "id": "RUST-BORROW",
       "title": "Borrow checker / ownership error",
       "rule": "Think about ownership before writing Rust: clone small values deliberately, borrow for reads, and don't hold a MutexGuard across .await.",
       "fix": "Read the E-code explanation (`rustc --explain E0xxx`).",
-      "patterns": ["error\\[E0(382|499|502|505|506|507|515|596|597|716|373)\\]"]
+      "patterns": [
+        "error\\[E0(382|499|502|505|506|507|515|596|597|716|373)\\]"
+      ],
+      "checks": [
+        "rust-clippy",
+        "rust-test"
+      ]
     },
     {
       "id": "RUST-TYPE",
       "title": "Rust type mismatch / missing trait / unresolved item",
       "rule": "Check exact types (i64 vs u64, &str vs String, Option wrapping) and imports before compiling; derive the traits (Serialize, Deserialize, Clone, Debug, PartialEq) the call sites need.",
       "fix": "Follow the compiler note; add the missing derive/import/conversion.",
-      "patterns": ["error\\[E0(308|277|599|425|433|432|412|061|063|560|614)\\]"]
+      "patterns": [
+        "error\\[E0(308|277|599|425|433|432|412|061|063|560|614)\\]"
+      ],
+      "checks": [
+        "rust-clippy",
+        "rust-test"
+      ]
     },
     {
       "id": "CARGO-LOCK-STALE",
       "title": "Cargo.lock out of date for --locked builds",
       "rule": "After changing dependencies run `cargo generate-lockfile`/`cargo build` and commit Cargo.lock.",
       "fix": "cd backend && cargo build && git add Cargo.lock",
-      "patterns": ["the lock file .* needs to be updated but --locked was passed"]
+      "patterns": [
+        "the lock file .* needs to be updated but --locked was passed"
+      ],
+      "checks": [
+        "rust-clippy",
+        "rust-test"
+      ]
     },
     {
       "id": "RUST-TEST-ASSERT",
       "title": "Rust test assertion failed",
       "rule": "When a Rust test fails, decide whether the test or the code is wrong from the spec (contracts/ + docs/architecture.md); never edit expected values just to make it pass.",
       "fix": "Run `cargo test <name> -- --nocapture` and compare left/right.",
-      "patterns": ["panicked at .*\\n(.*\\n)?\\s*(assertion|left:)", "assertion `left == right` failed", "test result: FAILED"]
+      "patterns": [
+        "panicked at .*\\n(.*\\n)?\\s*(assertion|left:)",
+        "assertion `left == right` failed",
+        "test result: FAILED"
+      ],
+      "checks": [
+        "rust-test"
+      ]
     },
     {
       "id": "CONTRACT-DRIFT",
       "title": "Implementation disagrees with a shared contract fixture",
       "rule": "contracts/*.json is the single source of truth for behaviour shared by Rust and Kotlin. Change the fixture first (with a reason), then make BOTH implementations pass.",
       "fix": "Run the contract test in both stacks: `cargo test contract` and `./gradlew :core:test --tests '*Contract*'`.",
-      "patterns": ["contract\\w* \\.\\.\\. FAILED", "Contract\\w*Test > .* FAILED", "contract case '.*' failed"]
+      "patterns": [
+        "contract\\w* \\.\\.\\. FAILED",
+        "Contract\\w*Test > .* FAILED",
+        "(?<![\"'])contract case '[^']*' failed"
+      ],
+      "checks": [
+        "rust-test",
+        "kotlin-core-test"
+      ]
     },
     {
       "id": "KOTLIN-UNRESOLVED",
       "title": "Kotlin unresolved reference / missing import",
       "rule": "Import what you use and keep package names in sync with directories (com.hearth.core.*).",
       "fix": "Add the import or fix the package declaration.",
-      "patterns": ["e: .*Unresolved reference"]
+      "patterns": [
+        "e: .*Unresolved reference"
+      ],
+      "checks": [
+        "kotlin-core-test",
+        "android-app"
+      ]
     },
     {
       "id": "KOTLIN-TYPE",
       "title": "Kotlin type mismatch / nullability error",
       "rule": "Respect nullability (String? vs String) and numeric types (Int vs Long) explicitly; amounts are Long so use `0L` literals.",
       "fix": "Add the conversion or null handling the compiler asks for.",
-      "patterns": ["e: .*(Type mismatch|Argument type mismatch|Only safe \\(\\?\\.\\) or non-null asserted|None of the following (candidates|functions) is applicable|Return type mismatch|The integer literal does not conform)"]
+      "patterns": [
+        "e: .*(Type mismatch|Argument type mismatch|Only safe \\(\\?\\.\\) or non-null asserted|None of the following (candidates|functions) is applicable|Return type mismatch|The integer literal does not conform)"
+      ],
+      "checks": [
+        "kotlin-core-test",
+        "android-app"
+      ]
     },
     {
       "id": "KOTLIN-TEST-ASSERT",
       "title": "Kotlin/JUnit test assertion failed",
       "rule": "When a JUnit test fails, read the expected/actual diff and check the spec before changing anything; never weaken the assertion.",
       "fix": "Open android/core/build/reports/tests/test/index.html or rerun with --info.",
-      "patterns": ["AssertionFailedError", "tests completed, \\d+ failed", "Test .* FAILED"]
+      "patterns": [
+        "AssertionFailedError",
+        "tests completed, \\d+ failed",
+        "Test .* FAILED"
+      ],
+      "checks": [
+        "kotlin-core-test",
+        "android-app"
+      ]
     },
     {
       "id": "GRADLE-RESOLVE",
       "title": "Gradle could not resolve a dependency or plugin",
       "rule": "Only use dependency versions that exist on Maven Central / Gradle Plugin Portal / Google Maven, declared in android/gradle/libs.versions.toml. Android (AGP/androidx) artifacts need Google Maven, which may be blocked offline.",
       "fix": "Check the coordinate/version; keep JVM-only modules free of androidx dependencies.",
-      "patterns": ["Could not resolve (all files|all dependencies|.*:.*:)", "Plugin \\[id: .*\\] was not found"]
+      "patterns": [
+        "Could not resolve (all files|all dependencies|.*:.*:)",
+        "Plugin \\[id: .*\\] was not found"
+      ],
+      "checks": [
+        "kotlin-core-test",
+        "android-app"
+      ]
     },
     {
       "id": "PY-HARNESS-TEST",
       "title": "Harness self-test failure",
       "rule": "The harness is code too: change harness/tests first, keep it stdlib-only (Python 3.11).",
       "fix": "cd harness && python3 -m unittest discover -s tests -t . -v",
-      "patterns": ["^FAILED \\((failures|errors)=\\d+", "ModuleNotFoundError"]
+      "patterns": [
+        "^FAILED \\((failures|errors)=\\d+",
+        "ModuleNotFoundError"
+      ],
+      "checks": [
+        "harness-tests"
+      ]
     }
   ]
 }

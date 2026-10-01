@@ -1,8 +1,20 @@
 {
-  "entries": {},
+  "entries": {
+    "RUST-FMT": {
+      "count": 1,
+      "first_seen": "2026-10-01T05:02:40Z",
+      "checks": {
+        "rust-fmt": 1
+      },
+      "last_seen": "2026-10-01T05:02:40Z"
+    }
+  },
   "active": {
     "guards": [],
-    "harness-tests": []
+    "harness-tests": [],
+    "rust-clippy": [],
+    "rust-fmt": [],
+    "rust-test": []
   },
   "unclassified": [],
   "history": [
@@ -13,6 +25,40 @@
       "checks": {
         "guards": "pass",
         "harness-tests": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:02:12Z",
+      "label": "core: first implementation",
+      "ok": true,
+      "checks": {
+        "rust-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:02:40Z",
+      "label": "core: lint",
+      "ok": false,
+      "checks": {
+        "guards": "pass",
+        "rust-fmt": "fail",
+        "rust-clippy": "pass"
+      },
+      "mistakes": [
+        "RUST-FMT"
+      ]
+    },
+    {
+      "at": "2026-10-01T05:03:26Z",
+      "label": "core: lint after fmt",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass",
+        "rust-fmt": "pass",
+        "rust-clippy": "pass"
       },
       "mistakes": []
     }

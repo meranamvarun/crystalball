@@ -1,0 +1,99 @@
+{
+ "description": "Categorizer behaviour over categories.json.",
+ "learned": {
+  "PAYTM XYZTRD4521": "Groceries",
+  "AMAZON PAY": "Bills & Utilities"
+ },
+ "cases": [
+  {
+   "merchant": "Big Bazaar",
+   "direction": "debit",
+   "key": "BIG BAZAAR",
+   "expect": "Groceries"
+  },
+  {
+   "merchant": "bigbazaar",
+   "direction": "debit",
+   "key": "BIGBAZAAR",
+   "expect": "Groceries"
+  },
+  {
+   "merchant": "uber.india",
+   "direction": "debit",
+   "key": "UBER INDIA",
+   "expect": "Transport"
+  },
+  {
+   "merchant": "UBER EATS",
+   "direction": "debit",
+   "key": "UBER EATS",
+   "expect": "Dining"
+  },
+  {
+   "merchant": "Amazon Prime",
+   "direction": "debit",
+   "key": "AMAZON PRIME",
+   "expect": "Entertainment"
+  },
+  {
+   "merchant": "Amazon",
+   "direction": "debit",
+   "key": "AMAZON",
+   "expect": "Shopping"
+  },
+  {
+   "merchant": "AMAZON PAY",
+   "direction": "debit",
+   "key": "AMAZON PAY",
+   "expect": "Bills & Utilities"
+  },
+  {
+   "merchant": "COCA COLA STORE",
+   "direction": "debit",
+   "key": "COCA COLA STORE",
+   "expect": null
+  },
+  {
+   "merchant": "School Canteen",
+   "direction": "debit",
+   "key": "SCHOOL CANTEEN",
+   "expect": "Dining"
+  },
+  {
+   "merchant": "Apollo Pharmacy",
+   "direction": "debit",
+   "key": "APOLLO PHARMACY",
+   "expect": "Health"
+  },
+  {
+   "merchant": "PAYTM-XYZTRD4521",
+   "direction": "debit",
+   "key": "PAYTM XYZTRD4521",
+   "expect": "Groceries"
+  },
+  {
+   "merchant": "PAYTM-ABC999",
+   "direction": "debit",
+   "key": "PAYTM ABC999",
+   "expect": null
+  },
+  {
+   "merchant": "FLIPKART",
+   "direction": "credit",
+   "key": "FLIPKART",
+   "expect": "Income"
+  },
+  {
+   "merchant": "Unknown",
+   "direction": "debit",
+   "key": "UNKNOWN",
+   "expect": null
+  },
+  {
+   "merchant": "  McDonald's  ",
+   "direction": "debit",
+   "key": "MCDONALD S",
+   "expect": "Dining"
+  }
+ ]
+}

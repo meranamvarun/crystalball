@@ -26,6 +26,7 @@ class Mistake:
     fix: str
     patterns: list[str]
     guards: list[Guard]
+    checks: list[str] = field(default_factory=list)  # empty = patterns apply to every check
 
 
 def load_catalog(path: Path) -> list[Mistake]:
@@ -39,6 +40,7 @@ def load_catalog(path: Path) -> list[Mistake]:
             fix=item.get("fix", ""),
             patterns=item.get("patterns", []),
             guards=[Guard(**g) for g in item.get("guards", [])],
+            checks=item.get("checks", []),
         ))
     return catalog
 
@@ -47,6 +49,8 @@ def save_catalog(path: Path, catalog: list[Mistake]) -> None:
     items = []
     for m in catalog:
         item = {"id": m.id, "title": m.title, "rule": m.rule, "fix": m.fix, "patterns": m.patterns}
+        if m.checks:
+            item["checks"] = m.checks
         if m.guards:
             item["guards"] = [
                 {k: v for k, v in g.__dict__.items() if v not in (None, [])} for g in m.guards
@@ -55,10 +59,20 @@ def save_catalog(path: Path, catalog: list[Mistake]) -> None:
     Path(path).write_text(json.dumps({"mistakes": items}, indent=2, ensure_ascii=False) + "\n")
 
 
-def classify(output: str, catalog: list[Mistake]) -> list[str]:
-    """Return ids of catalog mistakes whose patterns appear in the output, in catalog order."""
+ANSI = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
+
+
+def classify(output: str, catalog: list[Mistake], check: str | None = None) -> list[str]:
+    """Ids of catalog mistakes whose patterns appear in the output, in catalog order.
+
+    A mistake scoped to specific checks is only matched against those checks' output, so e.g. a
+    test-failure message quoted inside a rustfmt diff is not mistaken for a failing test.
+    """
+    output = ANSI.sub("", output)
     found = []
     for m in catalog:
+        if check is not None and m.checks and check not in m.checks:
+            continue
         if any(re.search(p, output, re.MULTILINE) for p in m.patterns):
             found.append(m.id)
     return found

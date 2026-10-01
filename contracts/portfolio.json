@@ -1,0 +1,197 @@
+{
+ "description": "Portfolio summary over non-deleted holdings/liabilities/goals/snapshots. gain = value - invested; gain_bps = round_div(gain*10000, invested) (null if invested = 0). members sorted by value desc then member_id. allocation per asset_class sorted by value desc then name, pct = round_div(value*100, total_value). net_worth = total_value - sum(liabilities). goals pct = round_div(saved*100, target), sorted by name. networth_trend = last 6 snapshots by month ascending.",
+ "input": {
+  "holdings": [
+   {
+    "id": "h1",
+    "member_id": "m_you",
+    "name": "NIFTY 50 ETF",
+    "asset_class": "equity",
+    "invested_minor": 50000000,
+    "value_minor": 60000000
+   },
+   {
+    "id": "h2",
+    "member_id": "m_you",
+    "name": "Parag Parikh Flexi Cap",
+    "asset_class": "mutual_fund",
+    "invested_minor": 40000000,
+    "value_minor": 52000000
+   },
+   {
+    "id": "h3",
+    "member_id": "m_priya",
+    "name": "SBI FD",
+    "asset_class": "fd",
+    "invested_minor": 30000000,
+    "value_minor": 31500000
+   },
+   {
+    "id": "h4",
+    "member_id": "m_priya",
+    "name": "SGB 2028",
+    "asset_class": "gold",
+    "invested_minor": 20000000,
+    "value_minor": 27000000
+   },
+   {
+    "id": "h5",
+    "member_id": "m_priya",
+    "name": "Old ULIP",
+    "asset_class": "other",
+    "invested_minor": 10000000,
+    "value_minor": 9000000,
+    "deleted": true
+   }
+  ],
+  "liabilities": [
+   {
+    "id": "l1",
+    "member_id": "m_you",
+    "name": "Home loan",
+    "outstanding_minor": 120000000
+   },
+   {
+    "id": "l2",
+    "member_id": "m_you",
+    "name": "Car loan",
+    "outstanding_minor": 5000000,
+    "deleted": true
+   }
+  ],
+  "goals": [
+   {
+    "id": "g1",
+    "name": "Goa Vacation Fund",
+    "target_minor": 15000000,
+    "saved_minor": 9200000,
+    "target_month": "2026-12"
+   },
+   {
+    "id": "g2",
+    "name": "Aarav College",
+    "target_minor": 200000000,
+    "saved_minor": 0,
+    "target_month": "2038-06"
+   }
+  ],
+  "snapshots": [
+   {
+    "month": "2026-03",
+    "value_minor": 40000000
+   },
+   {
+    "month": "2026-09",
+    "value_minor": 50500000
+   },
+   {
+    "month": "2026-04",
+    "value_minor": 41000000
+   },
+   {
+    "month": "2026-05",
+    "value_minor": 43000000
+   },
+   {
+    "month": "2026-06",
+    "value_minor": 44500000
+   },
+   {
+    "month": "2026-07",
+    "value_minor": 47000000
+   },
+   {
+    "month": "2026-08",
+    "value_minor": 49000000
+   }
+  ]
+ },
+ "expect": {
+  "total_value_minor": 170500000,
+  "invested_minor": 140000000,
+  "gain_minor": 30500000,
+  "gain_bps": 2179,
+  "members": [
+   {
+    "member_id": "m_you",
+    "value_minor": 112000000,
+    "invested_minor": 90000000,
+    "gain_bps": 2444
+   },
+   {
+    "member_id": "m_priya",
+    "value_minor": 58500000,
+    "invested_minor": 50000000,
+    "gain_bps": 1700
+   }
+  ],
+  "allocation": [
+   {
+    "asset_class": "equity",
+    "value_minor": 60000000,
+    "pct": 35
+   },
+   {
+    "asset_class": "mutual_fund",
+    "value_minor": 52000000,
+    "pct": 30
+   },
+   {
+    "asset_class": "fd",
+    "value_minor": 31500000,
+    "pct": 18
+   },
+   {
+    "asset_class": "gold",
+    "value_minor": 27000000,
+    "pct": 16
+   }
+  ],
+  "liabilities_minor": 120000000,
+  "net_worth_minor": 50500000,
+  "goals": [
+   {
+    "goal_id": "g2",
+    "name": "Aarav College",
+    "target_minor": 200000000,
+    "saved_minor": 0,
+    "pct": 0,
+    "target_month": "2038-06"
+   },
+   {
+    "goal_id": "g1",
+    "name": "Goa Vacation Fund",
+    "target_minor": 15000000,
+    "saved_minor": 9200000,
+    "pct": 61,
+    "target_month": "2026-12"
+   }
+  ],
+  "networth_trend": [
+   {
+    "month": "2026-04",
+    "value_minor": 41000000
+   },
+   {
+    "month": "2026-05",
+    "value_minor": 43000000
+   },
+   {
+    "month": "2026-06",
+    "value_minor": 44500000
+   },
+   {
+    "month": "2026-07",
+    "value_minor": 47000000
+   },
+   {
+    "month": "2026-08",
+    "value_minor": 49000000
+   },
+   {
+    "month": "2026-09",
+    "value_minor": 50500000
+   }
+  ]
+ }
+}
