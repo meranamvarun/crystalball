@@ -1,0 +1,65 @@
+# Hearth verification pipeline. Every check is a command run from `cwd` (relative to the repo root).
+#   paths    : a check is selected for `--changed` runs when a changed file starts with one of these
+#              (empty = always selected)
+#   fast     : included in `--fast` runs (used by the Claude Code Stop hook)
+#   requires : env:A|B  file:path  tool:bin  any:env=A,file=path  -> otherwise the check is SKIPPED
+
+[harness]
+promote_after = 2            # occurrences before a mistake's rule is promoted into CLAUDE.md
+max_iter = 4                 # generate/verify/fix rounds in `hearth.py loop`
+agent_cmd = ["claude", "-p", "--permission-mode", "acceptEdits"]
+
+[[check]]
+name = "guards"
+component = "guards"
+paths = []
+cmd = []
+builtin = "guards"
+
+[[check]]
+name = "harness-tests"
+component = "harness"
+paths = ["harness/"]
+cmd = ["python3", "-m", "unittest", "discover", "-s", "tests", "-t", "."]
+cwd = "harness"
+
+[[check]]
+name = "rust-fmt"
+component = "backend"
+paths = ["backend/"]
+cmd = ["cargo", "fmt", "--all", "--", "--check"]
+cwd = "backend"
+requires = ["tool:cargo"]
+
+[[check]]
+name = "rust-clippy"
+component = "backend"
+paths = ["backend/", "contracts/"]
+cmd = ["cargo", "clippy", "--all-targets", "--locked", "--", "-D", "warnings"]
+cwd = "backend"
+requires = ["tool:cargo"]
+
+[[check]]
+name = "rust-test"
+component = "backend"
+paths = ["backend/", "contracts/"]
+cmd = ["cargo", "test", "--locked", "--all"]
+cwd = "backend"
+requires = ["tool:cargo"]
+
+[[check]]
+name = "kotlin-core-test"
+component = "android-core"
+paths = ["android/core/", "android/build.gradle.kts", "android/settings.gradle.kts", "android/gradle/", "contracts/"]
+cmd = ["./gradlew", "--console=plain", "-q", ":core:check"]
+cwd = "android"
+requires = ["tool:java"]
+
+[[check]]
+name = "android-app"
+component = "android-app"
+paths = ["android/"]
+cmd = ["./gradlew", "--console=plain", ":app:testDebugUnitTest", ":app:assembleDebug"]
+cwd = "android"
+fast = false
+requires = ["any:env=ANDROID_HOME,env=ANDROID_SDK_ROOT,file=android/local.properties"]

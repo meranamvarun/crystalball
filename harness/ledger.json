@@ -1,0 +1,21 @@
+{
+  "entries": {},
+  "active": {
+    "guards": [],
+    "harness-tests": []
+  },
+  "unclassified": [],
+  "history": [
+    {
+      "at": "2026-10-01T04:53:04Z",
+      "label": "harness bootstrap",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass"
+      },
+      "mistakes": []
+    }
+  ],
+  "loops": []
+}
