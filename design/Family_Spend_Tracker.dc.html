@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/nocturne-1bae3da2-56bd-4afc-bc18-140b6cca1fb9/styles.css">
+<style>
+  body { margin: 0; }
+  .fst-scroll::-webkit-scrollbar { width: 0; height: 0; }
+</style>
+</helmet>
+<div style="min-height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center; padding: 40px 16px; background: radial-gradient(ellipse 800px 500px at 50% 0%, var(--color-accent-900) 0%, var(--color-bg) 60%); font-family: var(--font-body); box-sizing: border-box;">
+  <x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" width="{{ 412 }}" height="{{ 892 }}" dark="{{ true }}" hint-size="412px,892px">
+    <div class="fst-scroll" style="position: relative; height: 100%; display: flex; flex-direction: column; background: var(--color-bg); color: var(--color-text); overflow: hidden;">
+
+      <!-- ===================== ONBOARDING ===================== -->
+      <sc-if value="{{ showOnboarding }}" hint-placeholder-val="{{ true }}">
+        <div style="flex: 1; display: flex; flex-direction: column; padding: 28px 24px; box-sizing: border-box; overflow-y: auto;">
+
+          <sc-if value="{{ ob0 }}">
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 18px;">
+              <div style="width: 56px; height: 56px; border-radius: 14px; border: 1.5px solid var(--color-accent); display: flex; align-items: center; justify-content: center;">
+                <div style="width: 18px; height: 18px; border-radius: 50%; background: var(--color-accent);"></div>
+              </div>
+              <h1 style="margin: 0;">Hearth</h1>
+              <p style="font-size: 15px; opacity: 0.8; margin: 0;">Track spending for your whole family, auto-categorized from your SMS, synced the moment everyone's home on the same Wi-Fi.</p>
+              <button class="btn btn-primary btn-block" onClick="{{ nextOnboard }}">Get started</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ ob1 }}">
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 18px;">
+              <h6 class="text-muted" style="margin: 40px 0 0;">Step 1 of 3</h6>
+              <h2 style="margin: 0;">Set up your family</h2>
+              <p style="font-size: 14px; opacity: 0.8; margin: 0 0 8px;">Create a new family space, or join one your partner already started.</p>
+              <div class="field">
+                <label>Family name</label>
+                <input class="input" placeholder="e.g. The Sharma Family" value="The Sharma Family" />
+              </div>
+              <label class="radio"><input type="radio" name="fam" defaultChecked /><span class="dot"></span>Create a new family</label>
+              <label class="radio"><input type="radio" name="fam" /><span class="dot"></span>Join with an invite code</label>
+              <div style="flex: 1;"></div>
+              <button class="btn btn-primary btn-block" onClick="{{ nextOnboard }}">Continue</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ ob2 }}">
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 18px;">
+              <h6 class="text-muted" style="margin: 40px 0 0;">Step 2 of 3</h6>
+              <h2 style="margin: 0;">Read spending from SMS</h2>
+              <div class="card elev-sm">
+                <p class="card-body" style="margin: 0;">Hearth scans incoming bank &amp; UPI SMS on your device to log transactions automatically — nothing leaves your phone except the parsed amount, merchant and category.</p>
+              </div>
+              <p style="font-size: 13px; opacity: 0.7; margin: 0;">You can turn this off anytime in Settings and add transactions manually instead.</p>
+              <div style="flex: 1;"></div>
+              <button class="btn btn-primary btn-block" onClick="{{ nextOnboard }}">Allow SMS access</button>
+              <button class="btn btn-ghost btn-block" onClick="{{ nextOnboard }}">Skip for now</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ ob3 }}">
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 18px;">
+              <h6 class="text-muted" style="margin: 40px 0 0;">Step 3 of 3</h6>
+              <h2 style="margin: 0;">You're all set</h2>
+              <div class="card elev-sm">
+                <div class="card-kicker">How family sync works</div>
+                <p class="card-body" style="margin: 0;">When two or more of you are on the same home Wi-Fi, your spending and budgets sync locally — automatically, with no cloud step in between.</p>
+              </div>
+              <div style="flex: 1;"></div>
+              <button class="btn btn-primary btn-block" onClick="{{ enterApp }}">Enter Hearth</button>
+            </div>
+          </sc-if>
+
+        </div>
+      </sc-if>
+
+      <!-- ===================== MAIN APP ===================== -->
+      <sc-if value="{{ showApp }}">
+        <div style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
+
+          <!-- ---- HOME ---- -->
+          <sc-if value="{{ tHome }}">
+            <div class="fst-scroll" style="flex: 1; overflow-y: auto; padding: 20px 18px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                  <h6 class="text-muted" style="margin: 0 0 2px;">The Sharma Family</h6>
+                  <h3 style="margin: 0;">Good evening, You</h3>
+                </div>
+                <div onClick="{{ openSyncSheet }}" style="cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 100px; border: 1px solid var(--color-divider);">
+                  <div style="width: 7px; height: 7px; border-radius: 50%; background: var(--color-accent-400);"></div>
+                  <span style="font-size: 11px;">Synced</span>
+                </div>
+              </div>
+
+              <div class="seg" style="align-self: flex-start;">
+                <label class="seg-opt"><input type="radio" checked="{{ isSelf }}" onChange="{{ setScopeSelf }}" /><span>You</span></label>
+                <label class="seg-opt"><input type="radio" checked="{{ isFamily }}" onChange="{{ setScopeFamily }}" /><span>Family</span></label>
+              </div>
+
+              <div class="seg" style="align-self: flex-start;">
+                <label class="seg-opt"><input type="radio" checked="{{ isDay }}" onChange="{{ setRangeDay }}" /><span>Day</span></label>
+                <label class="seg-opt"><input type="radio" checked="{{ isWeek }}" onChange="{{ setRangeWeek }}" /><span>Week</span></label>
+                <label class="seg-opt"><input type="radio" checked="{{ isMonth }}" onChange="{{ setRangeMonth }}" /><span>Month</span></label>
+                <label class="seg-opt"><input type="radio" checked="{{ isYear }}" onChange="{{ setRangeYear }}" /><span>Year</span></label>
+              </div>
+
+              <div class="card elev-md">
+                <div class="card-kicker">{{ rangeLabel }} · {{ scopeLabel }}</div>
+                <div style="font-size: 34px; font-weight: 500; font-family: var(--font-heading);">{{ homeTotal }}</div>
+                <div class="card-meta">{{ homeDeltaLabel }} vs last period</div>
+              </div>
+
+              <sc-if value="{{ needsAttention }}">
+                <div onClick="{{ openCategorySheet }}" style="cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: var(--radius-md); background: var(--color-accent-900); border: 1px solid var(--color-accent-700);">
+                  <div style="display: flex; flex-direction: column; gap: 2px;">
+                    <span style="font-size: 13px; font-weight: 500;">1 transaction needs a category</span>
+                    <span style="font-size: 12px; opacity: 0.75;">₹850 at PAYTM-XYZTRD4521 · Sep 26</span>
+                  </div>
+                  <span class="tag tag-outline">Review</span>
+                </div>
+              </sc-if>
+
+              <sc-for list="{{ homeAlerts }}" as="al" hint-placeholder-count="0">
+                <div style="display: flex; gap: 10px; padding: 12px 14px; border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-divider);">
+                  <span class="tag tag-accent-2" style="flex-shrink: 0;">Alert</span>
+                  <span style="font-size: 13px; opacity: 0.9;">{{ al.text }}</span>
+                </div>
+              </sc-for>
+
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <h5 style="margin: 0;">Top categories</h5>
+                <a href="#" onClick="{{ goReports }}" style="font-size: 12px;">View all</a>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <sc-for list="{{ homeTopCategories }}" as="c" hint-placeholder-count="4">
+                  <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                      <span class="{{ c.tagClass }} tag">{{ c.name }}</span>
+                      <span class="text-muted">{{ c.amountLabel }}</span>
+                    </div>
+                    <div style="height: 5px; border-radius: 3px; background: var(--color-surface);">
+                      <div style="height: 100%; border-radius: 3px; background: var(--color-accent-500); width: {{ c.pctLabel }};"></div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <h5 style="margin: 4px 0 0;">Recent transactions</h5>
+              <div style="display: flex; flex-direction: column;">
+                <sc-for list="{{ homeTransactions }}" as="t" hint-placeholder-count="6">
+                  <div style="display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--color-divider);">
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: var(--color-surface); display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0;">{{ t.memberInitial }}</div>
+                    <div style="flex: 1; min-width: 0;">
+                      <div style="font-size: 13px;">{{ t.merchant }}</div>
+                      <div style="font-size: 11px; opacity: 0.6;">{{ t.date }} · {{ t.categoryLabel }}</div>
+                    </div>
+                    <div style="font-size: 13px; flex-shrink: 0;">{{ t.amountLabel }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- ---- REPORTS ---- -->
+          <sc-if value="{{ tReports }}">
+            <div class="fst-scroll" style="flex: 1; overflow-y: auto; padding: 20px 18px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px;">
+              <h3 style="margin: 0;">Reports</h3>
+              <div class="seg" style="align-self: flex-start;">
+                <label class="seg-opt"><input type="radio" checked="{{ isSelf }}" onChange="{{ setScopeSelf }}" /><span>You</span></label>
+                <label class="seg-opt"><input type="radio" checked="{{ isFamily }}" onChange="{{ setScopeFamily }}" /><span>Family</span></label>
+              </div>
+              <div class="seg" style="align-self: flex-start;">
+                <label class="seg-opt"><input type="radio" checked="{{ isDay }}" onChange="{{ setRangeDay }}" /><span>Day</span></label>
+                <label class="seg-opt"><input type="radio" checked="{{ isWeek }}" onChange="{{ setRangeWeek }}" /><span>Week</span></label>
+                <label class="seg-opt"><input type="radio" checked="{{ isMonth }}" onChange="{{ setRangeMonth }}" /><span>Month</span></label>
+                <label class="seg-opt"><input type="radio" checked="{{ isYear }}" onChange="{{ setRangeYear }}" /><span>Year</span></label>
+              </div>
+
+              <div class="card">
+                <div class="card-kicker">Total · {{ rangeLabel }}</div>
+                <div style="font-size: 26px; font-weight: 500; font-family: var(--font-heading);">{{ homeTotal }}</div>
+              </div>
+
+              <h5 style="margin: 0;">By category</h5>
+              <div style="display: flex; flex-direction: column; gap: 12px;">
+                <sc-for list="{{ reportsCategories }}" as="c" hint-placeholder-count="8">
+                  <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                      <span class="{{ c.tagClass }} tag">{{ c.name }}</span>
+                      <span>{{ c.amountLabel }} <span class="text-muted">· {{ c.pctIntLabel }}</span></span>
+                    </div>
+                    <div style="height: 5px; border-radius: 3px; background: var(--color-surface);">
+                      <div style="height: 100%; border-radius: 3px; background: var(--color-accent-500); width: {{ c.pctLabel }};"></div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <sc-if value="{{ isFamily }}">
+                <h5 style="margin: 4px 0 0;">By family member</h5>
+                <table class="table">
+                  <thead><tr><th>Member</th><th>Spent</th><th>Top category</th></tr></thead>
+                  <tbody>
+                    <sc-for list="{{ memberBreakdown }}" as="m" hint-placeholder-count="3">
+                      <tr><td>{{ m.name }}</td><td>{{ m.amountLabel }}</td><td>{{ m.topCategory }}</td></tr>
+                    </sc-for>
+                  </tbody>
+                </table>
+              </sc-if>
+
+              <div style="display: flex; gap: 10px; margin-top: 4px;">
+                <button class="btn btn-secondary" style="flex: 1;">Export PDF</button>
+                <button class="btn btn-secondary" style="flex: 1;">Share with family</button>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- ---- ANALYTICS ---- -->
+          <sc-if value="{{ tAnalytics }}">
+            <div class="fst-scroll" style="flex: 1; overflow-y: auto; padding: 20px 18px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px;">
+              <h3 style="margin: 0;">Analytics</h3>
+              <div class="seg" style="align-self: flex-start;">
+                <label class="seg-opt"><input type="radio" checked="{{ isSelf }}" onChange="{{ setScopeSelf }}" /><span>You</span></label>
+                <label class="seg-opt"><input type="radio" checked="{{ isFamily }}" onChange="{{ setScopeFamily }}" /><span>Family</span></label>
+              </div>
+
+              <div>
+                <h6 class="text-muted" style="margin: 0 0 10px;">Last 6 months</h6>
+                <div style="display: flex; align-items: flex-end; gap: 8px; height: 90px;">
+                  <sc-for list="{{ analyticsTrend }}" as="b" hint-placeholder-count="6">
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end;">
+                      <div style="width: 100%; border-radius: 3px 3px 0 0; background: {{ b.colorVar }}; height: {{ b.heightLabel }};"></div>
+                      <span style="font-size: 10px; opacity: 0.6;">{{ b.label }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div>
+                <h5 style="margin: 0 0 10px;">Budgets vs actual</h5>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  <sc-for list="{{ analyticsBudgets }}" as="bg" hint-placeholder-count="7">
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                      <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                        <span>{{ bg.name }}</span>
+                        <span class="{{ bg.overClass }}">{{ bg.amountLabel }} / {{ bg.capLabel }}</span>
+                      </div>
+                      <div style="height: 5px; border-radius: 3px; background: var(--color-surface);">
+                        <div style="height: 100%; border-radius: 3px; background: {{ bg.barColor }}; width: {{ bg.pctLabel }};"></div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div>
+                <h5 style="margin: 0 0 10px;">Top merchants</h5>
+                <div style="display: flex; flex-direction: column;">
+                  <sc-for list="{{ topMerchants }}" as="tm" hint-placeholder-count="5">
+                    <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--color-divider); font-size: 13px;">
+                      <span>{{ tm.name }}</span><span class="text-muted">{{ tm.amountLabel }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div>
+                <h5 style="margin: 0 0 10px;">Unusual spending</h5>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  <sc-for list="{{ homeAlerts }}" as="al2" hint-placeholder-count="0">
+                    <div style="display: flex; gap: 10px; padding: 12px 14px; border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-divider);">
+                      <span class="tag tag-accent-2" style="flex-shrink: 0;">Alert</span>
+                      <span style="font-size: 13px; opacity: 0.9;">{{ al2.text }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- ---- PORTFOLIO ---- -->
+          <sc-if value="{{ tPortfolio }}">
+            <div class="fst-scroll" style="flex: 1; overflow-y: auto; padding: 20px 18px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px;">
+              <h3 style="margin: 0;">Family investments</h3>
+
+              <div class="card elev-md">
+                <div class="card-kicker">Total portfolio value</div>
+                <div style="font-size: 30px; font-weight: 500; font-family: var(--font-heading);">{{ pfTotal }}</div>
+                <div class="card-meta">▲ {{ pfGainLabel }} this year</div>
+              </div>
+
+              <div>
+                <h5 style="margin: 0 0 10px;">By member</h5>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                  <sc-for list="{{ pfMembers }}" as="pm" hint-placeholder-count="2">
+                    <div class="card" style="flex-direction: row; align-items: center; justify-content: space-between;">
+                      <div>
+                        <div style="font-size: 13px; opacity: 0.7;">{{ pm.name }}</div>
+                        <div style="font-size: 17px; font-family: var(--font-heading); font-weight: 500;">{{ pm.valueLabel }}</div>
+                      </div>
+                      <span class="tag tag-accent">▲ {{ pm.gainLabel }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div>
+                <h5 style="margin: 0 0 10px;">Asset allocation</h5>
+                <div style="display: flex; height: 14px; border-radius: 4px; overflow: hidden;">
+                  <sc-for list="{{ pfAllocation }}" as="pa" hint-placeholder-count="4">
+                    <div style="height: 100%; background: {{ pa.color }}; width: {{ pa.pctLabel }};"></div>
+                  </sc-for>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px;">
+                  <sc-for list="{{ pfAllocation }}" as="pa2" hint-placeholder-count="4">
+                    <div style="display: flex; align-items: center; gap: 5px; font-size: 11px;">
+                      <div style="width: 8px; height: 8px; border-radius: 2px; background: {{ pa2.color }};"></div>{{ pa2.name }} {{ pa2.pctIntLabel }}
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div class="card elev-sm">
+                <div class="card-kicker">Net worth</div>
+                <div style="font-size: 22px; font-weight: 500; font-family: var(--font-heading);">{{ pfNetWorth }}</div>
+                <div style="display: flex; align-items: flex-end; gap: 6px; height: 40px; margin-top: 6px;">
+                  <sc-for list="{{ pfNetWorthTrend }}" as="nb" hint-placeholder-count="6">
+                    <div style="flex: 1; background: var(--color-accent-700); border-radius: 2px 2px 0 0; height: {{ nb.heightLabel }};"></div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-kicker">Family goal</div>
+                <div class="card-title">{{ pfGoal.name }}</div>
+                <div style="height: 6px; border-radius: 3px; background: var(--color-neutral-800); margin: 6px 0;">
+                  <div style="height: 100%; border-radius: 3px; background: var(--color-accent-500); width: {{ pfGoal.pctLabel }};"></div>
+                </div>
+                <div class="card-meta">{{ pfGoal.currentLabel }} of {{ pfGoal.targetLabel }} · ETA {{ pfGoal.eta }}</div>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- ---- MORE / SETTINGS ---- -->
+          <sc-if value="{{ tMore }}">
+            <div class="fst-scroll" style="flex: 1; overflow-y: auto; padding: 20px 18px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px;">
+              <h3 style="margin: 0;">Settings</h3>
+
+              <div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                  <h5 style="margin: 0;">Family members</h5>
+                  <button class="btn btn-ghost">+ Add</button>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                  <sc-for list="{{ familyMembers }}" as="fm" hint-placeholder-count="3">
+                    <div style="display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--color-divider);">
+                      <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--color-surface); display: flex; align-items: center; justify-content: center; font-size: 12px;">{{ fm.initial }}</div>
+                      <span style="flex: 1; font-size: 13px;">{{ fm.name }}</span>
+                      <span class="tag tag-outline">{{ fm.role }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div onClick="{{ openSyncSheet }}" style="cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-top: 1px solid var(--color-divider); border-bottom: 1px solid var(--color-divider);">
+                <span style="font-size: 13px;">Family Wi-Fi sync status</span>
+                <span class="text-muted" style="font-size: 12px;">2 of 3 online ›</span>
+              </div>
+
+              <div>
+                <h5 style="margin: 0 0 10px;">Bills &amp; recurring payments</h5>
+                <div style="display: flex; flex-direction: column;">
+                  <sc-for list="{{ bills }}" as="b" hint-placeholder-count="4">
+                    <div style="display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--color-divider);">
+                      <div style="flex: 1;">
+                        <div style="font-size: 13px;">{{ b.name }}</div>
+                        <div style="font-size: 11px; opacity: 0.6;">Due {{ b.due }}</div>
+                      </div>
+                      <span class="tag tag-neutral">{{ b.tag }}</span>
+                      <span style="font-size: 13px;">{{ b.amountLabel }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div>
+                <h5 style="margin: 0 0 10px;">SMS auto-read</h5>
+                <div class="seg">
+                  <label class="seg-opt"><input type="radio" name="sms" defaultChecked /><span>On</span></label>
+                  <label class="seg-opt"><input type="radio" name="sms" /><span>Off</span></label>
+                </div>
+              </div>
+
+              <button class="btn btn-secondary btn-block">Manage categories</button>
+              <button class="btn btn-ghost btn-block">Log out</button>
+            </div>
+          </sc-if>
+
+          <!-- ---- BOTTOM NAV ---- -->
+          <div style="display: flex; border-top: 1px solid var(--color-divider); background: var(--color-bg); padding: 8px 4px 10px;">
+            <div onClick="{{ goHome }}" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer;">
+              <div style="width: 16px; height: 16px; border-radius: 3px; border: 1.5px solid {{ navHomeColor }};"></div>
+              <span style="font-size: 10px; color: {{ navHomeColor }};">Home</span>
+            </div>
+            <div onClick="{{ goReports }}" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer;">
+              <div style="display: flex; align-items: flex-end; gap: 2px; height: 16px;">
+                <div style="width: 3px; height: 8px; background: {{ navReportsColor }};"></div>
+                <div style="width: 3px; height: 14px; background: {{ navReportsColor }};"></div>
+                <div style="width: 3px; height: 11px; background: {{ navReportsColor }};"></div>
+              </div>
+              <span style="font-size: 10px; color: {{ navReportsColor }};">Reports</span>
+            </div>
+            <div onClick="{{ goAnalytics }}" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer;">
+              <div style="width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 14px solid {{ navAnalyticsColor }};"></div>
+              <span style="font-size: 10px; color: {{ navAnalyticsColor }};">Analytics</span>
+            </div>
+            <div onClick="{{ goPortfolio }}" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer;">
+              <div style="width: 13px; height: 13px; transform: rotate(45deg); border: 1.5px solid {{ navPortfolioColor }};"></div>
+              <span style="font-size: 10px; color: {{ navPortfolioColor }};">Invest</span>
+            </div>
+            <div onClick="{{ goMore }}" style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer;">
+              <div style="width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid {{ navMoreColor }};"></div>
+              <span style="font-size: 10px; color: {{ navMoreColor }};">Settings</span>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ===================== SHEETS ===================== -->
+      <sc-if value="{{ sheetOpen }}">
+        <div onClick="{{ closeSheet }}" style="position: absolute; inset: 0; background: color-mix(in srgb, var(--color-neutral-900) 55%, transparent); display: flex; align-items: flex-end;">
+          <div onClick="{{ stop }}" style="width: 100%; background: var(--color-surface); border-radius: 16px 16px 0 0; padding: 18px 18px 22px; box-shadow: var(--shadow-lg); box-sizing: border-box;">
+
+            <sc-if value="{{ sheetIsCategory }}">
+              <h4 style="margin: 0 0 4px;">Choose a category</h4>
+              <p class="text-muted" style="margin: 0 0 14px; font-size: 13px;">₹850 at PAYTM-XYZTRD4521 · Sep 26</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                <sc-for list="{{ categoryOptions }}" as="co" hint-placeholder-count="7">
+                  <span class="tag tag-outline" onClick="{{ co.pick }}" style="cursor: pointer; font-size: 13px; padding: 7px 14px;">{{ co.name }}</span>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ sheetIsSync }}">
+              <h4 style="margin: 0 0 4px;">Family Wi-Fi sync</h4>
+              <p class="text-muted" style="margin: 0 0 14px; font-size: 13px;">Everyone syncs when on the same home network — no cloud step needed.</p>
+              <div style="display: flex; flex-direction: column;">
+                <sc-for list="{{ syncMembers }}" as="sm" hint-placeholder-count="3">
+                  <div style="display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--color-divider);">
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: var(--color-bg); display: flex; align-items: center; justify-content: center; font-size: 12px;">{{ sm.initial }}</div>
+                    <div style="flex: 1;">
+                      <div style="font-size: 13px;">{{ sm.name }}</div>
+                      <div style="font-size: 11px; opacity: 0.6;">{{ sm.status }}</div>
+                    </div>
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: {{ sm.dotColor }};"></div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <button class="btn btn-secondary btn-block" onClick="{{ closeSheet }}" style="margin-top: 16px;">Close</button>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </x-import>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const CATEGORY_NAMES = ['Groceries', 'Dining', 'Transport', 'Bills & Utilities', 'Shopping', 'Entertainment', 'Health'];
+const TAG_CLASSES = ['tag-accent', 'tag-outline', 'tag-neutral', 'tag-accent-2'];
+const RANGE_MULT = { day: 1 / 30, week: 7 / 30, month: 1, year: 12 };
+const RANGE_LABEL = { day: 'Today', week: 'This week', month: 'This month', year: 'This year' };
+
+const BASE = {
+  self: {
+    total: 43700, prevTotal: 45600,
+    categories: [
+      { name: 'Groceries', amount: 12400, cap: 15000 },
+      { name: 'Dining', amount: 8200, cap: 6000 },
+      { name: 'Transport', amount: 5100, cap: 6000 },
+      { name: 'Bills & Utilities', amount: 9800, cap: 10000 },
+      { name: 'Shopping', amount: 4200, cap: 5000 },
+      { name: 'Entertainment', amount: 2150, cap: 3000 },
+      { name: 'Health', amount: 1000, cap: 2000 },
+      { name: 'Uncategorized', amount: 850, cap: null },
+    ],
+    trend: [45600, 41200, 47800, 44900, 45600, 43700],
+    topMerchants: [{ name: 'Amazon', amount: 6400 }, { name: 'Big Bazaar', amount: 5200 }, { name: 'Swiggy', amount: 3800 }, { name: 'Uber', amount: 2100 }, { name: 'Netflix', amount: 649 }],
+  },
+  family: {
+    total: 118400, prevTotal: 121800,
+    categories: [
+      { name: 'Groceries', amount: 33800, cap: 38000 },
+      { name: 'Dining', amount: 19500, cap: 16000 },
+      { name: 'Transport', amount: 13200, cap: 15000 },
+      { name: 'Bills & Utilities', amount: 26500, cap: 28000 },
+      { name: 'Shopping', amount: 14600, cap: 14000 },
+      { name: 'Entertainment', amount: 6100, cap: 7000 },
+      { name: 'Health', amount: 3700, cap: 4000 },
+      { name: 'Uncategorized', amount: 1000, cap: null },
+    ],
+    trend: [121800, 118900, 126400, 123100, 121800, 118400],
+    topMerchants: [{ name: 'Amazon', amount: 11200 }, { name: 'Big Bazaar', amount: 9800 }, { name: 'Myntra', amount: 8400 }, { name: 'Zomato', amount: 6200 }, { name: 'Netflix', amount: 1298 }],
+  },
+};
+
+const TRANSACTIONS = [
+  { id: 't1', date: 'Sep 29', merchant: 'Big Bazaar', member: 'self', memberInitial: 'Y', category: 'Groceries', amount: 1840 },
+  { id: 't2', date: 'Sep 29', merchant: 'Zomato', member: 'priya', memberInitial: 'P', category: 'Dining', amount: 780 },
+  { id: 't3', date: 'Sep 28', merchant: 'Uber', member: 'self', memberInitial: 'Y', category: 'Transport', amount: 320 },
+  { id: 't4', date: 'Sep 28', merchant: 'Myntra', member: 'priya', memberInitial: 'P', category: 'Shopping', amount: 3200 },
+  { id: 't5', date: 'Sep 26', merchant: 'PAYTM-XYZTRD4521', member: 'self', memberInitial: 'Y', category: null, amount: 850 },
+  { id: 't6', date: 'Sep 25', merchant: 'Netflix', member: 'self', memberInitial: 'Y', category: 'Entertainment', amount: 649 },
+  { id: 't7', date: 'Sep 24', merchant: 'Apollo Pharmacy', member: 'self', memberInitial: 'Y', category: 'Health', amount: 420 },
+  { id: 't8', date: 'Sep 24', merchant: 'School Canteen', member: 'aarav', memberInitial: 'A', category: 'Dining', amount: 150 },
+  { id: 't9', date: 'Sep 27', merchant: 'Amazon', member: 'self', memberInitial: 'Y', category: 'Shopping', amount: 2150 },
+];
+
+const ALERTS = [
+  { id: 'a1', scope: 'both', text: 'Amazon purchase of \u20b92,150 is about 3x your usual Shopping spend this month.' },
+  { id: 'a2', scope: 'family', text: "Priya's \u20b93,200 Myntra purchase is unusually high for the Shopping category." },
+];
+
+const MEMBER_BREAKDOWN = [
+  { name: 'You', amount: 43700, topCategory: 'Groceries' },
+  { name: 'Priya', amount: 58900, topCategory: 'Shopping' },
+  { name: 'Aarav', amount: 15800, topCategory: 'Dining' },
+];
+
+const PORTFOLIO = {
+  total: 1842000, gainAmount: 214500, gainPct: 13.2,
+  members: [{ name: 'You', value: 1120000, gainPct: 9.8 }, { name: 'Priya', value: 722000, gainPct: 18.1 }],
+  allocation: [{ name: 'Equity', pct: 48 }, { name: 'Mutual Funds', pct: 27 }, { name: 'FD', pct: 15 }, { name: 'Gold', pct: 10 }],
+  netWorth: 2460000,
+  netWorthTrend: [2180000, 2225000, 2290000, 2340000, 2395000, 2460000],
+  goal: { name: 'Goa Vacation Fund', target: 150000, current: 92000, eta: 'Dec 2026' },
+};
+
+const BILLS = [
+  { name: 'Home Loan EMI', amount: 32400, due: 'Oct 3', tag: 'Recurring' },
+  { name: 'Rent', amount: 28000, due: 'Oct 5', tag: 'Recurring' },
+  { name: 'Electricity', amount: 2150, due: 'Oct 8', tag: 'Variable' },
+  { name: 'Netflix', amount: 649, due: 'Oct 12', tag: 'Autopay' },
+];
+
+const FAMILY_MEMBERS = [{ name: 'You', role: 'Admin', initial: 'Y' }, { name: 'Priya', role: 'Member', initial: 'P' }, { name: 'Aarav', role: 'Child', initial: 'A' }];
+const SYNC_MEMBERS = [
+  { name: 'You', status: 'Synced just now', initial: 'Y', online: true },
+  { name: 'Priya', status: 'Synced 2 min ago', initial: 'P', online: true },
+  { name: 'Aarav', status: 'Last synced 3h ago \u00b7 off home Wi-Fi', initial: 'A', online: false },
+];
+
+function inr(n) { return '\u20b9' + Math.round(n).toLocaleString('en-IN'); }
+
+class Component extends DCLogic {
+  state = { stage: 'onboarding', onboardStep: 0, tab: 'home', scope: 'self', range: 'month', sheet: null, recategorized: {} };
+
+  nextOnboard = () => this.setState(s => ({ onboardStep: s.onboardStep + 1 }));
+  enterApp = () => this.setState({ stage: 'app' });
+  goHome = () => this.setState({ tab: 'home' });
+  goReports = () => this.setState({ tab: 'reports' });
+  goAnalytics = () => this.setState({ tab: 'analytics' });
+  goPortfolio = () => this.setState({ tab: 'portfolio' });
+  goMore = () => this.setState({ tab: 'more' });
+  setScopeSelf = () => this.setState({ scope: 'self' });
+  setScopeFamily = () => this.setState({ scope: 'family' });
+  setRangeDay = () => this.setState({ range: 'day' });
+  setRangeWeek = () => this.setState({ range: 'week' });
+  setRangeMonth = () => this.setState({ range: 'month' });
+  setRangeYear = () => this.setState({ range: 'year' });
+  openCategorySheet = () => this.setState({ sheet: 'category' });
+  openSyncSheet = () => this.setState({ sheet: 'sync' });
+  closeSheet = () => this.setState({ sheet: null });
+  stop = (e) => { if (e && e.stopPropagation) e.stopPropagation(); };
+  pickCategory = (name) => this.setState(s => ({ recategorized: { ...s.recategorized, t5: name }, sheet: null }));
+
+  renderVals() {
+    const { stage, onboardStep, tab, scope, range, sheet, recategorized } = this.state;
+    const base = BASE[scope];
+    const mult = RANGE_MULT[range];
+
+    const catsRaw = base.categories.map(c => ({ ...c }));
+    if (recategorized.t5) {
+      const u = catsRaw.find(c => c.name === 'Uncategorized');
+      const chosen = catsRaw.find(c => c.name === recategorized.t5);
+      if (u && chosen) { u.amount -= 850; chosen.amount += 850; }
+    }
+    const visibleCats = catsRaw.filter(c => c.amount > 0);
+    const total = visibleCats.reduce((s, c) => s + c.amount, 0) * mult;
+
+    const buildCat = (c, i) => {
+      const amount = c.amount * mult;
+      return {
+        name: c.name, amountLabel: inr(amount),
+        pctLabel: Math.round((amount / total) * 100) + '%',
+        pctIntLabel: Math.round((amount / total) * 100) + '%',
+        tagClass: TAG_CLASSES[i % TAG_CLASSES.length],
+      };
+    };
+    const reportsCategories = visibleCats.map(buildCat);
+    const homeTopCategories = [...visibleCats].sort((a, b) => b.amount - a.amount).slice(0, 4).map(buildCat);
+
+    const deltaPct = scope === 'self' ? -4.2 : -2.8;
+    const homeDeltaLabel = (deltaPct > 0 ? '+' : '') + deltaPct.toFixed(1) + '%';
+
+    const txnFiltered = TRANSACTIONS.filter(t => scope === 'family' || t.member === 'self').map(t => {
+      const cat = t.id === 't5' && recategorized.t5 ? recategorized.t5 : t.category;
+      return { ...t, categoryLabel: cat || 'Needs category', amountLabel: inr(t.amount) };
+    });
+    const needsAttention = !recategorized.t5 && (scope === 'family' || true);
+
+    const homeAlerts = ALERTS.filter(a => a.scope === 'both' || (scope === 'family' && a.scope === 'family'));
+
+    const trendColors = ['var(--color-neutral-700)', 'var(--color-neutral-700)', 'var(--color-neutral-700)', 'var(--color-neutral-700)', 'var(--color-neutral-700)', 'var(--color-accent-500)'];
+    const maxTrend = Math.max(...base.trend);
+    const trendLabels = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
+    const analyticsTrend = base.trend.map((v, i) => ({ label: trendLabels[i], heightLabel: Math.round((v / maxTrend) * 100) + '%', colorVar: trendColors[i] }));
+
+    const analyticsBudgets = base.categories.filter(c => c.cap).map(c => {
+      const over = c.amount > c.cap;
+      return {
+        name: c.name, amountLabel: inr(c.amount), capLabel: inr(c.cap),
+        pctLabel: Math.min(100, Math.round((c.amount / c.cap) * 100)) + '%',
+        overClass: over ? 'tag tag-accent' : 'text-muted',
+        barColor: over ? 'var(--color-accent-400)' : 'var(--color-neutral-600)',
+      };
+    });
+
+    const topMerchants = base.topMerchants.map(m => ({ name: m.name, amountLabel: inr(m.amount) }));
+
+    const pfColors = ['var(--color-accent-400)', 'var(--color-accent-600)', 'var(--color-neutral-600)', 'var(--color-neutral-400)'];
+    const pfAllocation = PORTFOLIO.allocation.map((a, i) => ({ name: a.name, pctLabel: a.pct + '%', pctIntLabel: a.pct + '%', color: pfColors[i] }));
+    const maxNW = Math.max(...PORTFOLIO.netWorthTrend);
+
+    return {
+      showOnboarding: stage === 'onboarding', showApp: stage === 'app',
+      ob0: onboardStep === 0, ob1: onboardStep === 1, ob2: onboardStep === 2, ob3: onboardStep >= 3,
+      nextOnboard: this.nextOnboard, enterApp: this.enterApp,
+      tHome: tab === 'home', tReports: tab === 'reports', tAnalytics: tab === 'analytics', tPortfolio: tab === 'portfolio', tMore: tab === 'more',
+      goHome: this.goHome, goReports: this.goReports, goAnalytics: this.goAnalytics, goPortfolio: this.goPortfolio, goMore: this.goMore,
+      navHomeColor: tab === 'home' ? 'var(--color-accent)' : 'var(--color-neutral-500)',
+      navReportsColor: tab === 'reports' ? 'var(--color-accent)' : 'var(--color-neutral-500)',
+      navAnalyticsColor: tab === 'analytics' ? 'var(--color-accent)' : 'var(--color-neutral-500)',
+      navPortfolioColor: tab === 'portfolio' ? 'var(--color-accent)' : 'var(--color-neutral-500)',
+      navMoreColor: tab === 'more' ? 'var(--color-accent)' : 'var(--color-neutral-500)',
+      isSelf: scope === 'self', isFamily: scope === 'family', scopeLabel: scope === 'self' ? 'You' : 'Family',
+      setScopeSelf: this.setScopeSelf, setScopeFamily: this.setScopeFamily,
+      isDay: range === 'day', isWeek: range === 'week', isMonth: range === 'month', isYear: range === 'year',
+      setRangeDay: this.setRangeDay, setRangeWeek: this.setRangeWeek, setRangeMonth: this.setRangeMonth, setRangeYear: this.setRangeYear,
+      rangeLabel: RANGE_LABEL[range],
+      homeTotal: inr(total), homeDeltaLabel, homeTopCategories, homeTransactions: txnFiltered,
+      needsAttention, openCategorySheet: this.openCategorySheet, homeAlerts,
+      reportsCategories, memberBreakdown: MEMBER_BREAKDOWN.map(m => ({ ...m, amountLabel: inr(m.amount) })),
+      analyticsTrend, analyticsBudgets, topMerchants,
+      pfTotal: inr(PORTFOLIO.total), pfGainLabel: inr(PORTFOLIO.gainAmount) + ' (' + PORTFOLIO.gainPct + '%)',
+      pfMembers: PORTFOLIO.members.map(m => ({ name: m.name, valueLabel: inr(m.value), gainLabel: m.gainPct + '%' })),
+      pfAllocation,
+      pfNetWorth: inr(PORTFOLIO.netWorth),
+      pfNetWorthTrend: PORTFOLIO.netWorthTrend.map(v => ({ heightLabel: Math.round((v / maxNW) * 100) + '%' })),
+      pfGoal: { name: PORTFOLIO.goal.name, pctLabel: Math.round((PORTFOLIO.goal.current / PORTFOLIO.goal.target) * 100) + '%', currentLabel: inr(PORTFOLIO.goal.current), targetLabel: inr(PORTFOLIO.goal.target), eta: PORTFOLIO.goal.eta },
+      familyMembers: FAMILY_MEMBERS, bills: BILLS.map(b => ({ ...b, amountLabel: inr(b.amount) })),
+      openSyncSheet: this.openSyncSheet,
+      sheetOpen: !!sheet, sheetIsCategory: sheet === 'category', sheetIsSync: sheet === 'sync',
+      closeSheet: this.closeSheet, stop: this.stop,
+      categoryOptions: CATEGORY_NAMES.map(name => ({ name, pick: () => this.pickCategory(name) })),
+      syncMembers: SYNC_MEMBERS.map(sm => ({ ...sm, dotColor: sm.online ? 'var(--color-accent-400)' : 'var(--color-neutral-700)' })),
+    };
+  }
+}
+</script>
+</body>
+</html>
