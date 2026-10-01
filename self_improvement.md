@@ -30,6 +30,14 @@ Write one entry per non-obvious lesson: what went wrong, why, and the rule/guard
 
 <!-- Add newest lessons at the top. -->
 
+### 2026-10-01 · Contract tests prove each stack alone; an E2E proves they talk
+- **Gap:** both stacks passed the same fixtures, but nothing exercised the real wire protocol.
+- **Added:** `harness/e2e.py` (check `e2e`) builds and starts the Rust hub, runs the Kotlin
+  `HubE2ETest` (two phones, joint-account dedupe, recategorize → family rule, and Kotlin-vs-Rust
+  report equality on live data), and fails if the test was skipped or its result is stale.
+- **Also:** a pending local edit that loses LWW to a newer remote edit is dropped from the push
+  queue (`pendingEditThatLostToANewerRemoteEditIsDropped`).
+
 ### 2026-10-01 · A check that hides its failure output can't drive self-correction
 - **What happened:** a deliberate mutation of `SmsParser` made the Kotlin contract test fail, but
   `gradlew -q` swallowed the JUnit assertion, so the fix prompt would have said only "BUILD FAILED".
@@ -98,6 +106,8 @@ Write one entry per non-obvious lesson: what went wrong, why, and the rule/guard
 <!-- harness:history:start -->
 | When | Label | Result | Mistakes |
 |------|-------|--------|----------|
+| 2026-10-01T05:24:45Z | sync engine + cross-stack e2e | ✅ green | - |
+| 2026-10-01T05:23:00Z | kotlin core: protocol DTOs | ✅ green | - |
 | 2026-10-01T05:20:48Z | kotlin core: dashboard presenter | ✅ green | - |
 | 2026-10-01T05:18:38Z | full: after kotlin core | ✅ green | - |
 | 2026-10-01T05:17:58Z | kotlin core: first implementation | ✅ green | - |
@@ -111,7 +121,6 @@ Write one entry per non-obvious lesson: what went wrong, why, and the rule/guard
 | 2026-10-01T05:03:26Z | core: lint after fmt | ✅ green | - |
 | 2026-10-01T05:02:40Z | core: lint | ❌ red | RUST-FMT |
 | 2026-10-01T05:02:12Z | core: first implementation | ✅ green | - |
-| 2026-10-01T04:53:04Z | harness bootstrap | ✅ green | - |
 <!-- harness:history:end -->
 
 ## Generation loops (generated)

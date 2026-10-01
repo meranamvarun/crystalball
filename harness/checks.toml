@@ -64,3 +64,11 @@ cmd = ["./gradlew", "--console=plain", ":app:testDebugUnitTest", ":app:assembleD
 cwd = "android"
 fast = false
 requires = ["any:env=ANDROID_HOME,env=ANDROID_SDK_ROOT,file=android/local.properties"]
+
+[[check]]
+name = "e2e"
+component = "e2e"
+paths = ["backend/", "android/core/", "contracts/", "harness/e2e.py"]
+cmd = ["python3", "harness/e2e.py"]
+fast = false
+requires = ["tool:cargo", "tool:java"]

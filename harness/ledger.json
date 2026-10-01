@@ -18,6 +18,7 @@
     }
   },
   "active": {
+    "e2e": [],
     "guards": [],
     "harness-tests": [],
     "kotlin-core-test": [],
@@ -182,6 +183,25 @@
       "ok": true,
       "checks": {
         "kotlin-core-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:23:00Z",
+      "label": "kotlin core: protocol DTOs",
+      "ok": true,
+      "checks": {
+        "kotlin-core-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:24:45Z",
+      "label": "sync engine + cross-stack e2e",
+      "ok": true,
+      "checks": {
+        "kotlin-core-test": "pass",
+        "e2e": "pass"
       },
       "mistakes": []
     }

@@ -87,3 +87,33 @@ data class MemberSync(
 
 @Serializable
 data class SyncStatus(@SerialName("now_ms") val nowMs: Long, val members: List<MemberSync>)
+
+@Serializable
+data class MemberInfo(val id: String, val name: String, val role: String)
+
+@Serializable
+data class FamilyInfo(
+    val id: String,
+    val name: String,
+    @SerialName("invite_code") val inviteCode: String,
+    @SerialName("tz_offset_minutes") val tzOffsetMinutes: Int,
+    val me: String,
+    val members: List<MemberInfo>,
+) {
+    fun memberNames(): Map<String, String> = members.associate { it.id to it.name }
+}
+
+@Serializable
+data class CreateFamilyRequest(
+    @SerialName("family_name") val familyName: String,
+    @SerialName("member_name") val memberName: String,
+    @SerialName("device_name") val deviceName: String,
+    @SerialName("tz_offset_minutes") val tzOffsetMinutes: Int,
+)
+
+@Serializable
+data class JoinFamilyRequest(
+    @SerialName("invite_code") val inviteCode: String,
+    @SerialName("member_name") val memberName: String,
+    @SerialName("device_name") val deviceName: String,
+)

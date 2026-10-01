@@ -36,6 +36,8 @@ include(":core")
 val sdkAvailable = System.getenv("ANDROID_HOME") != null ||
     System.getenv("ANDROID_SDK_ROOT") != null ||
     file("local.properties").takeIf { it.exists() }?.readText()?.contains("sdk.dir") == true
+// Read by the root build script to put the Android Gradle Plugin on the root classpath.
+System.setProperty("hearth.sdkAvailable", sdkAvailable.toString())
 if (sdkAvailable) {
     include(":app")
 } else {
