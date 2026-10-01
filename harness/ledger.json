@@ -1,0 +1,259 @@
+{
+  "entries": {
+    "RUST-FMT": {
+      "count": 3,
+      "first_seen": "2026-10-01T05:02:40Z",
+      "checks": {
+        "rust-fmt": 3
+      },
+      "last_seen": "2026-10-01T05:08:19Z"
+    },
+    "RUST-TYPE": {
+      "count": 1,
+      "first_seen": "2026-10-01T05:06:24Z",
+      "checks": {
+        "rust-test": 1
+      },
+      "last_seen": "2026-10-01T05:06:24Z"
+    }
+  },
+  "active": {
+    "e2e": [],
+    "guards": [],
+    "harness-tests": [],
+    "kotlin-core-test": [],
+    "kotlin-lint": [],
+    "rust-clippy": [],
+    "rust-fmt": [],
+    "rust-test": []
+  },
+  "unclassified": [],
+  "history": [
+    {
+      "at": "2026-10-01T04:53:04Z",
+      "label": "harness bootstrap",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:02:12Z",
+      "label": "core: first implementation",
+      "ok": true,
+      "checks": {
+        "rust-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:02:40Z",
+      "label": "core: lint",
+      "ok": false,
+      "checks": {
+        "guards": "pass",
+        "rust-fmt": "fail",
+        "rust-clippy": "pass"
+      },
+      "mistakes": [
+        "RUST-FMT"
+      ]
+    },
+    {
+      "at": "2026-10-01T05:03:26Z",
+      "label": "core: lint after fmt",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass",
+        "rust-fmt": "pass",
+        "rust-clippy": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:06:24Z",
+      "label": "server: first implementation",
+      "ok": false,
+      "checks": {
+        "rust-test": "fail"
+      },
+      "mistakes": [
+        "RUST-TYPE"
+      ]
+    },
+    {
+      "at": "2026-10-01T05:06:52Z",
+      "label": "server: clap env feature",
+      "ok": true,
+      "checks": {
+        "rust-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:07:00Z",
+      "label": "server: lint",
+      "ok": false,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass",
+        "rust-fmt": "fail",
+        "rust-clippy": "pass"
+      },
+      "mistakes": [
+        "RUST-FMT"
+      ]
+    },
+    {
+      "at": "2026-10-01T05:07:49Z",
+      "label": "server: lint with autofix (before autofix)",
+      "ok": false,
+      "checks": {
+        "rust-fmt": "fail"
+      },
+      "mistakes": [
+        "RUST-FMT"
+      ]
+    },
+    {
+      "at": "2026-10-01T05:07:49Z",
+      "label": "server: lint with autofix",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass",
+        "rust-fmt": "pass",
+        "rust-clippy": "pass",
+        "rust-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:08:19Z",
+      "label": "server: member reference validation (before autofix)",
+      "ok": false,
+      "checks": {
+        "rust-fmt": "fail"
+      },
+      "mistakes": [
+        "RUST-FMT"
+      ]
+    },
+    {
+      "at": "2026-10-01T05:08:19Z",
+      "label": "server: member reference validation",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "rust-fmt": "pass",
+        "rust-clippy": "pass",
+        "rust-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:17:58Z",
+      "label": "kotlin core: first implementation",
+      "ok": true,
+      "checks": {
+        "kotlin-core-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:18:38Z",
+      "label": "full: after kotlin core",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass",
+        "rust-fmt": "pass",
+        "rust-clippy": "pass",
+        "rust-test": "pass",
+        "kotlin-core-test": "pass",
+        "android-app": "skip"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:20:48Z",
+      "label": "kotlin core: dashboard presenter",
+      "ok": true,
+      "checks": {
+        "kotlin-core-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:23:00Z",
+      "label": "kotlin core: protocol DTOs",
+      "ok": true,
+      "checks": {
+        "kotlin-core-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:24:45Z",
+      "label": "sync engine + cross-stack e2e",
+      "ok": true,
+      "checks": {
+        "kotlin-core-test": "pass",
+        "e2e": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:28:36Z",
+      "label": "kotlin core: rupee parsing",
+      "ok": true,
+      "checks": {
+        "kotlin-core-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:31:46Z",
+      "label": "guards: precise SMS logging guard",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:33:21Z",
+      "label": "full: android app + ktlint",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass",
+        "rust-fmt": "pass",
+        "rust-clippy": "pass",
+        "rust-test": "pass",
+        "kotlin-core-test": "pass",
+        "kotlin-lint": "pass",
+        "android-app": "skip",
+        "e2e": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:35:29Z",
+      "label": "stop-hook",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass",
+        "kotlin-core-test": "pass",
+        "kotlin-lint": "pass"
+      },
+      "mistakes": []
+    }
+  ],
+  "loops": []
+}

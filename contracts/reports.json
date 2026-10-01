@@ -1,0 +1,390 @@
+{
+ "description": "Spend report over contracts/dataset.json. Spend = non-deleted debits in [start,end) local time. scope 'me' filters to member 'me'. categories: amount desc, then name (null sorts as 'Uncategorized'); pct = round_div(amount*100, total). members: amount desc then member_id; top_category = largest category of that member (same ordering). top_merchants: top 5 by amount desc then merchant. delta_bps = round_div((total-prev)*10000, prev), null when prev = 0. round_div rounds half away from zero.",
+ "dataset": "dataset.json",
+ "cases": [
+  {
+   "name": "family month",
+   "scope": "family",
+   "me": "m_you",
+   "range": "month",
+   "anchor": "2026-09-29",
+   "expect": {
+    "total_minor": 1035900,
+    "prev_total_minor": 260000,
+    "delta_bps": 29842,
+    "categories": [
+     {
+      "category": "Shopping",
+      "amount_minor": 535000,
+      "pct": 52
+     },
+     {
+      "category": "Groceries",
+      "amount_minor": 184000,
+      "pct": 18
+     },
+     {
+      "category": "Dining",
+      "amount_minor": 93000,
+      "pct": 9
+     },
+     {
+      "category": null,
+      "amount_minor": 85000,
+      "pct": 8
+     },
+     {
+      "category": "Entertainment",
+      "amount_minor": 64900,
+      "pct": 6
+     },
+     {
+      "category": "Health",
+      "amount_minor": 42000,
+      "pct": 4
+     },
+     {
+      "category": "Transport",
+      "amount_minor": 32000,
+      "pct": 3
+     }
+    ],
+    "members": [
+     {
+      "member_id": "m_you",
+      "amount_minor": 622900,
+      "top_category": "Shopping"
+     },
+     {
+      "member_id": "m_priya",
+      "amount_minor": 398000,
+      "top_category": "Shopping"
+     },
+     {
+      "member_id": "m_aarav",
+      "amount_minor": 15000,
+      "top_category": "Dining"
+     }
+    ],
+    "top_merchants": [
+     {
+      "merchant": "Myntra",
+      "amount_minor": 320000
+     },
+     {
+      "merchant": "Amazon",
+      "amount_minor": 215000
+     },
+     {
+      "merchant": "Big Bazaar",
+      "amount_minor": 184000
+     },
+     {
+      "merchant": "PAYTM-XYZTRD4521",
+      "amount_minor": 85000
+     },
+     {
+      "merchant": "Zomato",
+      "amount_minor": 78000
+     }
+    ],
+    "needs_review": 1
+   }
+  },
+  {
+   "name": "personal month",
+   "scope": "me",
+   "me": "m_you",
+   "range": "month",
+   "anchor": "2026-09-29",
+   "expect": {
+    "total_minor": 622900,
+    "prev_total_minor": 210000,
+    "delta_bps": 19662,
+    "categories": [
+     {
+      "category": "Shopping",
+      "amount_minor": 215000,
+      "pct": 35
+     },
+     {
+      "category": "Groceries",
+      "amount_minor": 184000,
+      "pct": 30
+     },
+     {
+      "category": null,
+      "amount_minor": 85000,
+      "pct": 14
+     },
+     {
+      "category": "Entertainment",
+      "amount_minor": 64900,
+      "pct": 10
+     },
+     {
+      "category": "Health",
+      "amount_minor": 42000,
+      "pct": 7
+     },
+     {
+      "category": "Transport",
+      "amount_minor": 32000,
+      "pct": 5
+     }
+    ],
+    "members": [
+     {
+      "member_id": "m_you",
+      "amount_minor": 622900,
+      "top_category": "Shopping"
+     }
+    ],
+    "top_merchants": [
+     {
+      "merchant": "Amazon",
+      "amount_minor": 215000
+     },
+     {
+      "merchant": "Big Bazaar",
+      "amount_minor": 184000
+     },
+     {
+      "merchant": "PAYTM-XYZTRD4521",
+      "amount_minor": 85000
+     },
+     {
+      "merchant": "Netflix",
+      "amount_minor": 64900
+     },
+     {
+      "merchant": "Apollo Pharmacy",
+      "amount_minor": 42000
+     }
+    ],
+    "needs_review": 1
+   }
+  },
+  {
+   "name": "family day uses local time and negative delta rounds away from zero",
+   "scope": "family",
+   "me": "m_you",
+   "range": "day",
+   "anchor": "2026-09-29",
+   "expect": {
+    "total_minor": 262000,
+    "prev_total_minor": 352000,
+    "delta_bps": -2557,
+    "categories": [
+     {
+      "category": "Groceries",
+      "amount_minor": 184000,
+      "pct": 70
+     },
+     {
+      "category": "Dining",
+      "amount_minor": 78000,
+      "pct": 30
+     }
+    ],
+    "members": [
+     {
+      "member_id": "m_you",
+      "amount_minor": 184000,
+      "top_category": "Groceries"
+     },
+     {
+      "member_id": "m_priya",
+      "amount_minor": 78000,
+      "top_category": "Dining"
+     }
+    ],
+    "top_merchants": [
+     {
+      "merchant": "Big Bazaar",
+      "amount_minor": 184000
+     },
+     {
+      "merchant": "Zomato",
+      "amount_minor": 78000
+     }
+    ],
+    "needs_review": 0
+   }
+  },
+  {
+   "name": "family week starts monday",
+   "scope": "family",
+   "me": "m_you",
+   "range": "week",
+   "anchor": "2026-09-29",
+   "expect": {
+    "total_minor": 623900,
+    "prev_total_minor": 421900,
+    "delta_bps": 4788,
+    "categories": [
+     {
+      "category": "Shopping",
+      "amount_minor": 320000,
+      "pct": 51
+     },
+     {
+      "category": "Groceries",
+      "amount_minor": 184000,
+      "pct": 29
+     },
+     {
+      "category": "Dining",
+      "amount_minor": 87900,
+      "pct": 14
+     },
+     {
+      "category": "Transport",
+      "amount_minor": 32000,
+      "pct": 5
+     }
+    ],
+    "members": [
+     {
+      "member_id": "m_priya",
+      "amount_minor": 407900,
+      "top_category": "Shopping"
+     },
+     {
+      "member_id": "m_you",
+      "amount_minor": 216000,
+      "top_category": "Groceries"
+     }
+    ],
+    "top_merchants": [
+     {
+      "merchant": "Myntra",
+      "amount_minor": 320000
+     },
+     {
+      "merchant": "Big Bazaar",
+      "amount_minor": 184000
+     },
+     {
+      "merchant": "Zomato",
+      "amount_minor": 78000
+     },
+     {
+      "merchant": "Uber",
+      "amount_minor": 32000
+     },
+     {
+      "merchant": "Swiggy",
+      "amount_minor": 9900
+     }
+    ],
+    "needs_review": 0
+   }
+  },
+  {
+   "name": "family year with empty previous period and category tie",
+   "scope": "family",
+   "me": "m_you",
+   "range": "year",
+   "anchor": "2026-09-29",
+   "expect": {
+    "total_minor": 1305800,
+    "prev_total_minor": 0,
+    "delta_bps": null,
+    "categories": [
+     {
+      "category": "Shopping",
+      "amount_minor": 535000,
+      "pct": 41
+     },
+     {
+      "category": "Groceries",
+      "amount_minor": 384000,
+      "pct": 29
+     },
+     {
+      "category": "Dining",
+      "amount_minor": 152900,
+      "pct": 12
+     },
+     {
+      "category": null,
+      "amount_minor": 85000,
+      "pct": 7
+     },
+     {
+      "category": "Entertainment",
+      "amount_minor": 64900,
+      "pct": 5
+     },
+     {
+      "category": "Health",
+      "amount_minor": 42000,
+      "pct": 3
+     },
+     {
+      "category": "Transport",
+      "amount_minor": 42000,
+      "pct": 3
+     }
+    ],
+    "members": [
+     {
+      "member_id": "m_you",
+      "amount_minor": 832900,
+      "top_category": "Groceries"
+     },
+     {
+      "member_id": "m_priya",
+      "amount_minor": 457900,
+      "top_category": "Shopping"
+     },
+     {
+      "member_id": "m_aarav",
+      "amount_minor": 15000,
+      "top_category": "Dining"
+     }
+    ],
+    "top_merchants": [
+     {
+      "merchant": "Big Bazaar",
+      "amount_minor": 384000
+     },
+     {
+      "merchant": "Myntra",
+      "amount_minor": 320000
+     },
+     {
+      "merchant": "Amazon",
+      "amount_minor": 215000
+     },
+     {
+      "merchant": "Zomato",
+      "amount_minor": 128000
+     },
+     {
+      "merchant": "PAYTM-XYZTRD4521",
+      "amount_minor": 85000
+     }
+    ],
+    "needs_review": 1
+   }
+  },
+  {
+   "name": "empty period",
+   "scope": "family",
+   "me": "m_you",
+   "range": "month",
+   "anchor": "2025-03-10",
+   "expect": {
+    "total_minor": 0,
+    "prev_total_minor": 0,
+    "delta_bps": null,
+    "categories": [],
+    "members": [],
+    "top_merchants": [],
+    "needs_review": 0
+   }
+  }
+ ]
+}

@@ -1,0 +1,12 @@
+/.harness/
+__pycache__/
+backend/target/
+android/.gradle/
+android/**/build/
+android/local.properties
+android/.kotlin/
+*.iml
+.idea/
+*.db
+*.db-wal
+*.db-shm

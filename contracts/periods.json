@@ -1,0 +1,14 @@
+{
+  "description": "Reporting periods as local dates, end exclusive. Weeks start on Monday. 'prev' is the period immediately before.",
+  "cases": [
+    {"range": "day", "anchor": "2026-09-29", "start": "2026-09-29", "end": "2026-09-30", "prev_start": "2026-09-28", "prev_end": "2026-09-29"},
+    {"range": "week", "anchor": "2026-09-29", "start": "2026-09-28", "end": "2026-10-05", "prev_start": "2026-09-21", "prev_end": "2026-09-28"},
+    {"range": "week", "anchor": "2026-10-04", "start": "2026-09-28", "end": "2026-10-05", "prev_start": "2026-09-21", "prev_end": "2026-09-28"},
+    {"range": "week", "anchor": "2026-09-28", "start": "2026-09-28", "end": "2026-10-05", "prev_start": "2026-09-21", "prev_end": "2026-09-28"},
+    {"range": "month", "anchor": "2026-09-29", "start": "2026-09-01", "end": "2026-10-01", "prev_start": "2026-08-01", "prev_end": "2026-09-01"},
+    {"range": "month", "anchor": "2026-01-15", "start": "2026-01-01", "end": "2026-02-01", "prev_start": "2025-12-01", "prev_end": "2026-01-01"},
+    {"range": "month", "anchor": "2024-03-31", "start": "2024-03-01", "end": "2024-04-01", "prev_start": "2024-02-01", "prev_end": "2024-03-01"},
+    {"range": "month", "anchor": "2026-12-31", "start": "2026-12-01", "end": "2027-01-01", "prev_start": "2026-11-01", "prev_end": "2026-12-01"},
+    {"range": "year", "anchor": "2026-09-29", "start": "2026-01-01", "end": "2027-01-01", "prev_start": "2025-01-01", "prev_end": "2026-01-01"}
+  ]
+}

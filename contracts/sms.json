@@ -1,0 +1,167 @@
+{
+ "description": "On-device SMS parsing (consumed by android/core). Amounts in paise. merchant: VPA handle before '@', else text after trf to/towards/at/to/for/on (debit) or from/by (credit) up to ' on ', 'Ref', 'UPI', '. ', 'Avl', newline or end; 'Unknown' if none. Messages that are OTPs, promotions (no debit/credit verb or no account/card/UPI mention), failures, collect requests or future mandates parse to null.",
+ "cases": [
+  {
+   "name": "HDFC UPI multi-line",
+   "sender": "VM-HDFCBK",
+   "body": "Sent Rs.649.00\nFrom HDFC Bank A/C *1234\nTo Netflix\nOn 25/09/26\nRef 627312345678\nNot You?\nCall 18002586161/SMS BLOCK UPI to 7308080808",
+   "expect": {
+    "amount_minor": 64900,
+    "direction": "debit",
+    "merchant": "Netflix",
+    "account_last4": "1234",
+    "reference": "627312345678"
+   }
+  },
+  {
+   "name": "SBI UPI amount without currency",
+   "sender": "AD-SBIUPI",
+   "body": "Dear UPI user A/C X4521 debited by 850.0 on date 26Sep26 trf to PAYTM-XYZTRD4521 Refno 626912345678. If not u? call 1800111109. -SBI",
+   "expect": {
+    "amount_minor": 85000,
+    "direction": "debit",
+    "merchant": "PAYTM-XYZTRD4521",
+    "account_last4": "4521",
+    "reference": "626912345678"
+   }
+  },
+  {
+   "name": "ICICI card spend, ignores available limit",
+   "sender": "VK-ICICIB",
+   "body": "INR 780.00 spent using ICICI Bank Card XX4521 on 29-Sep-26 on ZOMATO. Avl Limit: INR 1,23,456.78. If not you, call 1800 2662/SMS BLOCK 4521 to 9215676766.",
+   "expect": {
+    "amount_minor": 78000,
+    "direction": "debit",
+    "merchant": "ZOMATO",
+    "account_last4": "4521",
+    "reference": null
+   }
+  },
+  {
+   "name": "Axis debit at merchant",
+   "sender": "JD-AXISBK",
+   "body": "Rs 1,840.00 debited from A/c no. XX1234 on 29-09-26 at BIG BAZAAR. Avl Bal Rs 45,210.55",
+   "expect": {
+    "amount_minor": 184000,
+    "direction": "debit",
+    "merchant": "BIG BAZAAR",
+    "account_last4": "1234",
+    "reference": null
+   }
+  },
+  {
+   "name": "Kotak UPI to VPA",
+   "sender": "BZ-KOTAKB",
+   "body": "Sent Rs.320.00 from Kotak Bank AC X9876 to uber.india@axisbank on 28-09-26.UPI Ref 627198765432. Not you, https://kotak.com/KBANKT/Fraud",
+   "expect": {
+    "amount_minor": 32000,
+    "direction": "debit",
+    "merchant": "uber.india",
+    "account_last4": "9876",
+    "reference": "627198765432"
+   }
+  },
+  {
+   "name": "rupee symbol and 'for' merchant",
+   "sender": "VM-INDBNK",
+   "body": "₹2,150.00 debited from your a/c **4521 for AMAZON PAY on 27-09-2026. UPI Ref: 627099998888",
+   "expect": {
+    "amount_minor": 215000,
+    "direction": "debit",
+    "merchant": "AMAZON PAY",
+    "account_last4": "4521",
+    "reference": "627099998888"
+   }
+  },
+  {
+   "name": "towards merchant",
+   "sender": "VM-CANBNK",
+   "body": "Your A/c XXXXX1234 is debited for Rs 320.00 on 28-Sep-26 towards UBER INDIA. Avl Bal Rs 5000",
+   "expect": {
+    "amount_minor": 32000,
+    "direction": "debit",
+    "merchant": "UBER INDIA",
+    "account_last4": "1234",
+    "reference": null
+   }
+  },
+  {
+   "name": "salary credit by NEFT",
+   "sender": "VM-HDFCBK",
+   "body": "Rs.50,000.00 credited to A/c XX1234 on 01-09-26 by NEFT from ACME CORP PVT LTD. Avl Bal Rs.1,02,345.00 -HDFC Bank",
+   "expect": {
+    "amount_minor": 5000000,
+    "direction": "credit",
+    "merchant": "ACME CORP PVT LTD",
+    "account_last4": "1234",
+    "reference": null
+   }
+  },
+  {
+   "name": "refund credit",
+   "sender": "VM-HDFCBK",
+   "body": "Refund of Rs 499.00 credited to your A/c XX1234 from FLIPKART",
+   "expect": {
+    "amount_minor": 49900,
+    "direction": "credit",
+    "merchant": "FLIPKART",
+    "account_last4": "1234",
+    "reference": null
+   }
+  },
+  {
+   "name": "ATM withdrawal",
+   "sender": "VM-SBIINB",
+   "body": "Rs.2,000.00 withdrawn at SBI ATM KORAMANGALA on 12-09-26 from A/c XX1234. Avl Bal Rs.8,000.00",
+   "expect": {
+    "amount_minor": 200000,
+    "direction": "debit",
+    "merchant": "SBI ATM KORAMANGALA",
+    "account_last4": "1234",
+    "reference": null
+   }
+  },
+  {
+   "name": "unknown merchant still parsed",
+   "sender": "VM-HDFCBK",
+   "body": "Rs.1,000.00 debited from A/c XX1234 on 12-09-26. Avl Bal Rs.7,000.00",
+   "expect": {
+    "amount_minor": 100000,
+    "direction": "debit",
+    "merchant": "Unknown",
+    "account_last4": "1234",
+    "reference": null
+   }
+  },
+  {
+   "name": "OTP is not a transaction",
+   "sender": "VM-HDFCBK",
+   "body": "123456 is your OTP for txn of Rs.2,150.00 at AMAZON on HDFC Bank card ending 4521. Valid for 10 mins. Do not share.",
+   "expect": null
+  },
+  {
+   "name": "promotion is not a transaction",
+   "sender": "VM-JIOMKT",
+   "body": "Get flat Rs.500 cashback on your next recharge! Use code SAVE500. T&C apply",
+   "expect": null
+  },
+  {
+   "name": "failed transaction is ignored",
+   "sender": "VM-HDFCBK",
+   "body": "Your transaction of Rs.100.00 at SWIGGY using card XX4521 has failed.",
+   "expect": null
+  },
+  {
+   "name": "collect request is ignored",
+   "sender": "VM-HDFCBK",
+   "body": "HDFC Bank: Rs.500.00 requested by merchant@ybl from your A/c XX1234. Approve in app only if you know the payee.",
+   "expect": null
+  },
+  {
+   "name": "mandate reminder is ignored",
+   "sender": "VM-HDFCBK",
+   "body": "Rs.649.00 will be debited from your A/c XX1234 on 12-10-26 towards NETFLIX mandate.",
+   "expect": null
+  }
+ ]
+}

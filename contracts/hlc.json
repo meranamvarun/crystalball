@@ -1,0 +1,22 @@
+{
+  "description": "Hybrid logical clock. String form '{millis:013}-{counter:04}-{node}'. tick = local event at wall time now_ms; recv = merge a remote HLC at wall time now_ms. If the counter would exceed 9999 the clock moves to millis+1, counter 0.",
+  "tick": [
+    {"name": "wall clock ahead resets counter", "state": {"millis": 1000, "counter": 5, "node": "a"}, "now_ms": 2000, "expect": "0000000002000-0000-a"},
+    {"name": "wall clock behind increments counter", "state": {"millis": 1000, "counter": 5, "node": "a"}, "now_ms": 900, "expect": "0000000001000-0006-a"},
+    {"name": "same millisecond increments counter", "state": {"millis": 1000, "counter": 5, "node": "a"}, "now_ms": 1000, "expect": "0000000001000-0006-a"},
+    {"name": "counter overflow moves to next millisecond", "state": {"millis": 1000, "counter": 9999, "node": "a"}, "now_ms": 500, "expect": "0000000001001-0000-a"}
+  ],
+  "recv": [
+    {"name": "remote ahead", "state": {"millis": 1000, "counter": 1, "node": "a"}, "remote": "0000000003000-0007-b", "now_ms": 2000, "expect": "0000000003000-0008-a"},
+    {"name": "local ahead", "state": {"millis": 5000, "counter": 2, "node": "a"}, "remote": "0000000003000-0007-b", "now_ms": 4000, "expect": "0000000005000-0003-a"},
+    {"name": "local and remote equal millis", "state": {"millis": 3000, "counter": 2, "node": "a"}, "remote": "0000000003000-0007-b", "now_ms": 1000, "expect": "0000000003000-0008-a"},
+    {"name": "wall clock ahead of both", "state": {"millis": 1000, "counter": 2, "node": "a"}, "remote": "0000000001500-0009-b", "now_ms": 9000, "expect": "0000000009000-0000-a"}
+  ],
+  "parse": [
+    {"input": "0000000001000-0001-dev-a1", "valid": true, "millis": 1000, "counter": 1, "node": "dev-a1"},
+    {"input": "0000000001000-0001", "valid": false},
+    {"input": "1000-0001-a", "valid": false},
+    {"input": "000000000100x-0001-a", "valid": false},
+    {"input": "0000000001000-0001-", "valid": false}
+  ]
+}

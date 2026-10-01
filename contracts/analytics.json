@@ -1,0 +1,302 @@
+{
+ "description": "Analytics. trend: monthly spend totals for the `months` months ending at the anchor's month (oldest first), over dataset.json. budgets: monthly budgets for the scope (family scope = budgets with member_id null; me = budgets with member_id = me) vs spend in that category for the anchor month, sorted by category; used_pct = round_div(spent*100, cap); over = spent > cap. anomalies: debits in the anchor month (scope-filtered) whose amount >= 3x the mean of same-scope, same-category debits in the 90 days strictly before it (needs >= 3 baseline debits); ratio_pct = round_div(amount*100*count, baseline_sum); newest first.",
+ "dataset": "dataset.json",
+ "trend": [
+  {
+   "scope": "family",
+   "me": "m_you",
+   "anchor": "2026-09-29",
+   "months": 6,
+   "expect": [
+    {
+     "month": "2026-04",
+     "total_minor": 0
+    },
+    {
+     "month": "2026-05",
+     "total_minor": 0
+    },
+    {
+     "month": "2026-06",
+     "total_minor": 0
+    },
+    {
+     "month": "2026-07",
+     "total_minor": 0
+    },
+    {
+     "month": "2026-08",
+     "total_minor": 260000
+    },
+    {
+     "month": "2026-09",
+     "total_minor": 1035900
+    }
+   ]
+  },
+  {
+   "scope": "me",
+   "me": "m_you",
+   "anchor": "2026-09-29",
+   "months": 3,
+   "expect": [
+    {
+     "month": "2026-07",
+     "total_minor": 0
+    },
+    {
+     "month": "2026-08",
+     "total_minor": 210000
+    },
+    {
+     "month": "2026-09",
+     "total_minor": 622900
+    }
+   ]
+  },
+  {
+   "scope": "family",
+   "me": "m_you",
+   "anchor": "2026-01-10",
+   "months": 2,
+   "expect": [
+    {
+     "month": "2025-12",
+     "total_minor": 0
+    },
+    {
+     "month": "2026-01",
+     "total_minor": 0
+    }
+   ]
+  }
+ ],
+ "budgets": [
+  {
+   "scope": "family",
+   "me": "m_you",
+   "anchor": "2026-09-29",
+   "expect": [
+    {
+     "budget_id": "b2",
+     "category": "Dining",
+     "cap_minor": 100000,
+     "spent_minor": 93000,
+     "used_pct": 93,
+     "over": false
+    },
+    {
+     "budget_id": "b1",
+     "category": "Groceries",
+     "cap_minor": 150000,
+     "spent_minor": 184000,
+     "used_pct": 123,
+     "over": true
+    },
+    {
+     "budget_id": "b4",
+     "category": "Health",
+     "cap_minor": 40000,
+     "spent_minor": 42000,
+     "used_pct": 105,
+     "over": true
+    },
+    {
+     "budget_id": "b3",
+     "category": "Shopping",
+     "cap_minor": 400000,
+     "spent_minor": 535000,
+     "used_pct": 134,
+     "over": true
+    }
+   ]
+  },
+  {
+   "scope": "me",
+   "me": "m_you",
+   "anchor": "2026-09-29",
+   "expect": [
+    {
+     "budget_id": "b5",
+     "category": "Dining",
+     "cap_minor": 20000,
+     "spent_minor": 0,
+     "used_pct": 0,
+     "over": false
+    },
+    {
+     "budget_id": "b6",
+     "category": "Shopping",
+     "cap_minor": 200000,
+     "spent_minor": 215000,
+     "used_pct": 108,
+     "over": true
+    }
+   ]
+  }
+ ],
+ "anomalies": {
+  "tz_offset_minutes": 330,
+  "transactions": [
+   {
+    "id": "a1",
+    "member_id": "m_you",
+    "amount_minor": 50000,
+    "direction": "debit",
+    "merchant": "X",
+    "category": "Shopping",
+    "at": "2026-07-10T12:00"
+   },
+   {
+    "id": "a2",
+    "member_id": "m_priya",
+    "amount_minor": 80000,
+    "direction": "debit",
+    "merchant": "X",
+    "category": "Shopping",
+    "at": "2026-08-05T12:00"
+   },
+   {
+    "id": "a3",
+    "member_id": "m_you",
+    "amount_minor": 70000,
+    "direction": "debit",
+    "merchant": "X",
+    "category": "Shopping",
+    "at": "2026-08-25T12:00"
+   },
+   {
+    "id": "a4",
+    "member_id": "m_you",
+    "amount_minor": 215000,
+    "direction": "debit",
+    "merchant": "X",
+    "category": "Shopping",
+    "at": "2026-09-27T12:00"
+   },
+   {
+    "id": "a5",
+    "member_id": "m_priya",
+    "amount_minor": 320000,
+    "direction": "debit",
+    "merchant": "X",
+    "category": "Shopping",
+    "at": "2026-09-28T12:00"
+   },
+   {
+    "id": "a6",
+    "member_id": "m_you",
+    "amount_minor": 30000,
+    "direction": "debit",
+    "merchant": "X",
+    "category": "Dining",
+    "at": "2026-09-20T12:00"
+   },
+   {
+    "id": "a7",
+    "member_id": "m_you",
+    "amount_minor": 10000,
+    "direction": "debit",
+    "merchant": "X",
+    "category": "Dining",
+    "at": "2026-09-01T12:00"
+   },
+   {
+    "id": "a8",
+    "member_id": "m_you",
+    "amount_minor": 12000,
+    "direction": "debit",
+    "merchant": "X",
+    "category": "Dining",
+    "at": "2026-09-05T12:00"
+   },
+   {
+    "id": "a9",
+    "member_id": "m_you",
+    "amount_minor": 100000,
+    "direction": "debit",
+    "merchant": "X",
+    "category": "Groceries",
+    "at": "2026-09-15T12:00"
+   },
+   {
+    "id": "a10",
+    "member_id": "m_you",
+    "amount_minor": 40000,
+    "direction": "debit",
+    "merchant": "X",
+    "category": "Groceries",
+    "at": "2026-08-01T12:00"
+   },
+   {
+    "id": "a11",
+    "member_id": "m_you",
+    "amount_minor": 40000,
+    "direction": "debit",
+    "merchant": "X",
+    "category": "Groceries",
+    "at": "2026-08-10T12:00"
+   },
+   {
+    "id": "a12",
+    "member_id": "m_you",
+    "amount_minor": 40000,
+    "direction": "debit",
+    "merchant": "X",
+    "category": "Groceries",
+    "at": "2026-08-20T12:00"
+   },
+   {
+    "id": "a13",
+    "member_id": "m_you",
+    "amount_minor": 1000,
+    "direction": "debit",
+    "merchant": "X",
+    "category": "Shopping",
+    "at": "2026-05-01T12:00"
+   },
+   {
+    "id": "a14",
+    "member_id": "m_you",
+    "amount_minor": 999999,
+    "direction": "debit",
+    "merchant": "X",
+    "category": null,
+    "at": "2026-09-02T12:00"
+   }
+  ],
+  "cases": [
+   {
+    "scope": "family",
+    "me": "m_you",
+    "anchor": "2026-09-29",
+    "expect": [
+     {
+      "transaction_id": "a5",
+      "category": "Shopping",
+      "amount_minor": 320000,
+      "ratio_pct": 308
+     },
+     {
+      "transaction_id": "a4",
+      "category": "Shopping",
+      "amount_minor": 215000,
+      "ratio_pct": 323
+     }
+    ]
+   },
+   {
+    "scope": "me",
+    "me": "m_you",
+    "anchor": "2026-09-29",
+    "expect": []
+   },
+   {
+    "scope": "family",
+    "me": "m_you",
+    "anchor": "2026-08-29",
+    "expect": []
+   }
+  ]
+ }
+}

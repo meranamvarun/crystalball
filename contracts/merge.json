@@ -1,0 +1,67 @@
+{
+  "description": "Last-writer-wins merge keyed by (entity, id). Incoming replaces local iff incoming.hlc > local.hlc (string compare). Records in a batch are applied in order. 'applied' lists 'entity/id' for every record that changed local state, in order. 'state' is the resulting store sorted by (entity, id).",
+  "cases": [
+    {
+      "name": "insert new record",
+      "local": [],
+      "incoming": [{"entity": "transaction", "id": "t1", "hlc": "0000000001000-0000-a", "deleted": false, "author": "m1", "payload": {"amount_minor": 100}}],
+      "applied": ["transaction/t1"],
+      "state": [{"entity": "transaction", "id": "t1", "hlc": "0000000001000-0000-a", "deleted": false, "author": "m1", "payload": {"amount_minor": 100}}]
+    },
+    {
+      "name": "newer incoming wins",
+      "local": [{"entity": "transaction", "id": "t1", "hlc": "0000000001000-0000-a", "deleted": false, "author": "m1", "payload": {"amount_minor": 100}}],
+      "incoming": [{"entity": "transaction", "id": "t1", "hlc": "0000000002000-0000-b", "deleted": false, "author": "m2", "payload": {"amount_minor": 200}}],
+      "applied": ["transaction/t1"],
+      "state": [{"entity": "transaction", "id": "t1", "hlc": "0000000002000-0000-b", "deleted": false, "author": "m2", "payload": {"amount_minor": 200}}]
+    },
+    {
+      "name": "older incoming is ignored",
+      "local": [{"entity": "transaction", "id": "t1", "hlc": "0000000002000-0000-a", "deleted": false, "author": "m1", "payload": {"amount_minor": 100}}],
+      "incoming": [{"entity": "transaction", "id": "t1", "hlc": "0000000001999-0009-b", "deleted": false, "author": "m2", "payload": {"amount_minor": 200}}],
+      "applied": [],
+      "state": [{"entity": "transaction", "id": "t1", "hlc": "0000000002000-0000-a", "deleted": false, "author": "m1", "payload": {"amount_minor": 100}}]
+    },
+    {
+      "name": "equal hlc is a no-op",
+      "local": [{"entity": "budget", "id": "b1", "hlc": "0000000002000-0001-a", "deleted": false, "author": "m1", "payload": {"cap_minor": 5}}],
+      "incoming": [{"entity": "budget", "id": "b1", "hlc": "0000000002000-0001-a", "deleted": false, "author": "m1", "payload": {"cap_minor": 5}}],
+      "applied": [],
+      "state": [{"entity": "budget", "id": "b1", "hlc": "0000000002000-0001-a", "deleted": false, "author": "m1", "payload": {"cap_minor": 5}}]
+    },
+    {
+      "name": "same millis and counter broken by node id",
+      "local": [{"entity": "transaction", "id": "t1", "hlc": "0000000001000-0000-a", "deleted": false, "author": "m1", "payload": {"category": "Dining"}}],
+      "incoming": [{"entity": "transaction", "id": "t1", "hlc": "0000000001000-0000-b", "deleted": false, "author": "m2", "payload": {"category": "Groceries"}}],
+      "applied": ["transaction/t1"],
+      "state": [{"entity": "transaction", "id": "t1", "hlc": "0000000001000-0000-b", "deleted": false, "author": "m2", "payload": {"category": "Groceries"}}]
+    },
+    {
+      "name": "newer tombstone deletes",
+      "local": [{"entity": "holding", "id": "h1", "hlc": "0000000001000-0000-a", "deleted": false, "author": "m1", "payload": {"name": "Gold"}}],
+      "incoming": [{"entity": "holding", "id": "h1", "hlc": "0000000003000-0000-a", "deleted": true, "author": "m1", "payload": {"name": "Gold"}}],
+      "applied": ["holding/h1"],
+      "state": [{"entity": "holding", "id": "h1", "hlc": "0000000003000-0000-a", "deleted": true, "author": "m1", "payload": {"name": "Gold"}}]
+    },
+    {
+      "name": "same id in different entities are independent",
+      "local": [{"entity": "budget", "id": "x", "hlc": "0000000005000-0000-a", "deleted": false, "author": "m1", "payload": {}}],
+      "incoming": [{"entity": "bill", "id": "x", "hlc": "0000000001000-0000-a", "deleted": false, "author": "m1", "payload": {}}],
+      "applied": ["bill/x"],
+      "state": [
+        {"entity": "bill", "id": "x", "hlc": "0000000001000-0000-a", "deleted": false, "author": "m1", "payload": {}},
+        {"entity": "budget", "id": "x", "hlc": "0000000005000-0000-a", "deleted": false, "author": "m1", "payload": {}}
+      ]
+    },
+    {
+      "name": "batch applies in order and keeps the newest",
+      "local": [],
+      "incoming": [
+        {"entity": "transaction", "id": "t1", "hlc": "0000000002000-0000-a", "deleted": false, "author": "m1", "payload": {"amount_minor": 2}},
+        {"entity": "transaction", "id": "t1", "hlc": "0000000001500-0000-a", "deleted": false, "author": "m1", "payload": {"amount_minor": 1}}
+      ],
+      "applied": ["transaction/t1"],
+      "state": [{"entity": "transaction", "id": "t1", "hlc": "0000000002000-0000-a", "deleted": false, "author": "m1", "payload": {"amount_minor": 2}}]
+    }
+  ]
+}
