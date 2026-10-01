@@ -1,12 +1,20 @@
 {
   "entries": {
     "RUST-FMT": {
-      "count": 1,
+      "count": 3,
       "first_seen": "2026-10-01T05:02:40Z",
       "checks": {
-        "rust-fmt": 1
+        "rust-fmt": 3
       },
-      "last_seen": "2026-10-01T05:02:40Z"
+      "last_seen": "2026-10-01T05:08:19Z"
+    },
+    "RUST-TYPE": {
+      "count": 1,
+      "first_seen": "2026-10-01T05:06:24Z",
+      "checks": {
+        "rust-test": 1
+      },
+      "last_seen": "2026-10-01T05:06:24Z"
     }
   },
   "active": {
@@ -59,6 +67,87 @@
         "harness-tests": "pass",
         "rust-fmt": "pass",
         "rust-clippy": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:06:24Z",
+      "label": "server: first implementation",
+      "ok": false,
+      "checks": {
+        "rust-test": "fail"
+      },
+      "mistakes": [
+        "RUST-TYPE"
+      ]
+    },
+    {
+      "at": "2026-10-01T05:06:52Z",
+      "label": "server: clap env feature",
+      "ok": true,
+      "checks": {
+        "rust-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:07:00Z",
+      "label": "server: lint",
+      "ok": false,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass",
+        "rust-fmt": "fail",
+        "rust-clippy": "pass"
+      },
+      "mistakes": [
+        "RUST-FMT"
+      ]
+    },
+    {
+      "at": "2026-10-01T05:07:49Z",
+      "label": "server: lint with autofix (before autofix)",
+      "ok": false,
+      "checks": {
+        "rust-fmt": "fail"
+      },
+      "mistakes": [
+        "RUST-FMT"
+      ]
+    },
+    {
+      "at": "2026-10-01T05:07:49Z",
+      "label": "server: lint with autofix",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass",
+        "rust-fmt": "pass",
+        "rust-clippy": "pass",
+        "rust-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:08:19Z",
+      "label": "server: member reference validation (before autofix)",
+      "ok": false,
+      "checks": {
+        "rust-fmt": "fail"
+      },
+      "mistakes": [
+        "RUST-FMT"
+      ]
+    },
+    {
+      "at": "2026-10-01T05:08:19Z",
+      "label": "server: member reference validation",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "rust-fmt": "pass",
+        "rust-clippy": "pass",
+        "rust-test": "pass"
       },
       "mistakes": []
     }

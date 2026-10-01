@@ -28,6 +28,7 @@ class Check:
     requires: list[str] = field(default_factory=list)
     builtin: str | None = None
     timeout_s: int = 1800
+    fix: list[str] = field(default_factory=list)  # mechanical fixer run by --autofix (e.g. cargo fmt)
 
 
 def load_config(path: Path) -> tuple[list[Check], dict]:
@@ -109,6 +110,22 @@ def run_check(check: Check, root: Path, catalog: list[Mistake], env: dict | None
         return CheckResult(check.name, "pass", duration_s=duration)
     return CheckResult(check.name, "fail", mistakes=classify(output, catalog, check.name),
                        output_tail=output[-TAIL_CHARS:], duration_s=duration)
+
+
+def run_with_autofix(check: Check, root: Path, catalog: list[Mistake],
+                     env: dict | None = None) -> tuple[CheckResult, CheckResult]:
+    """Run a check; if it fails and has a mechanical fixer, apply it and re-run.
+
+    Returns (first, final). The first failure is still worth recording: the mistake happened.
+    """
+    first = run_check(check, root, catalog, env)
+    if first.status != "fail" or not check.fix:
+        return first, first
+    subprocess.run(check.fix, cwd=Path(root) / check.cwd, env=dict(os.environ if env is None else env),
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=check.timeout_s)
+    final = run_check(check, root, catalog, env)
+    final.autofixed = final.status == "pass"
+    return first, final
 
 
 def changed_files(root: Path) -> list[str]:

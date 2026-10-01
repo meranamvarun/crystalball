@@ -255,6 +255,24 @@
       "checks": [
         "harness-tests"
       ]
+    },
+    {
+      "id": "CARGO-FEATURE-MISSING",
+      "title": "Crate API used without enabling its cargo feature",
+      "rule": "Before using an optional crate API, enable its feature in Cargo.toml (clap: env/derive, tokio: macros/rt-multi-thread/fs/time, chrono: clock/serde, serde: derive, tower: util). A 'not found' error on a third-party item usually means a missing feature, not a typo.",
+      "fix": "Add the feature to the dependency in Cargo.toml (e.g. clap = { features = [\"derive\", \"env\"] }).",
+      "patterns": [
+        "no method named `env` found for struct `Arg`",
+        "unresolved import `tokio::(fs|process|time|io|net|sync|signal)",
+        "could not find `(main|test)` in `tokio`",
+        "no function or associated item named `now` found for struct `Utc`",
+        "cannot find derive macro `(Serialize|Deserialize|Parser)`",
+        "no method named `oneshot` found"
+      ],
+      "checks": [
+        "rust-clippy",
+        "rust-test"
+      ]
     }
   ]
 }

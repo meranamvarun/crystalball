@@ -58,5 +58,5 @@ cd android && ./gradlew :app:assembleDebug # needs ANDROID_HOME or android/local
 Mistakes that recurred at least `promote_after` times (see `harness/checks.toml`) are promoted here.
 
 <!-- harness:rules:start -->
-_No mistake has recurred often enough to be promoted yet._
+- **RUST-FMT** (seen 3x): Run `cargo fmt --all` (in backend/) after editing Rust. Fix: `cd backend && cargo fmt --all`.
 <!-- harness:rules:end -->

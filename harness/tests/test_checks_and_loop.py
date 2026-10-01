@@ -134,3 +134,30 @@ class LoopTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AutofixTest(unittest.TestCase):
+    def test_autofix_runs_fix_then_rechecks(self):
+        from hearth_harness.checks import run_with_autofix
+        with tempfile.TemporaryDirectory() as d:
+            marker = Path(d) / "formatted"
+            c = Check(name="fmt", component="x", paths=[], cwd=".", fast=True, requires=[],
+                      cmd=[sys.executable, "-c", f"import os,sys; sys.exit(0 if os.path.exists({str(marker)!r}) else 1)"],
+                      fix=[sys.executable, "-c", f"open({str(marker)!r}, 'w').close()"])
+            first, final = run_with_autofix(c, Path(d), [])
+            self.assertEqual(first.status, "fail")
+            self.assertEqual(final.status, "pass")
+            self.assertTrue(final.autofixed)
+
+    def test_no_fix_command_means_single_run(self):
+        from hearth_harness.checks import run_with_autofix
+        c = Check(name="t", component="t", paths=[], cwd=".", fast=True, requires=[],
+                  cmd=[sys.executable, "-c", "import sys; sys.exit(1)"])
+        first, final = run_with_autofix(c, Path("."), [])
+        self.assertIs(first, final)
+        self.assertEqual(final.status, "fail")
+
+    def test_repo_rust_fmt_check_has_fix(self):
+        checks, _ = load_config(REPO_ROOT / "harness" / "checks.toml")
+        fmt = next(c for c in checks if c.name == "rust-fmt")
+        self.assertEqual(fmt.fix, ["cargo", "fmt", "--all"])

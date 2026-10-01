@@ -17,6 +17,7 @@ class CheckResult:
     output_tail: str = ""
     duration_s: float = 0.0
     reason: str = ""
+    autofixed: bool = False
 
 
 @dataclass

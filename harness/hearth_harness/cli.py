@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .catalog import Guard, Mistake, load_catalog, save_catalog
-from .checks import changed_files, load_config, run_check, select_checks
+from .checks import changed_files, load_config, run_check, run_with_autofix, select_checks
 from .docs import sync_docs
 from .ledger import CheckResult, Ledger, RunResult
 from .loop import build_fix_prompt, run_loop
@@ -35,21 +35,28 @@ def relevant_changes() -> list[str]:
 
 
 def verify(fast: bool, changed: list[str] | None, only: set[str] | None, label: str,
-           record: bool = True, quiet: bool = False) -> list[CheckResult]:
+           record: bool = True, quiet: bool = False, autofix: bool = False) -> list[CheckResult]:
     checks, settings = load_config(HARNESS / "checks.toml")
     catalog = load_catalog(HARNESS / "mistakes.json")
-    results = []
+    results, fixed_first = [], []
     for check in select_checks(checks, changed=changed, fast=fast, only=only):
         if not quiet:
             print(f"▶ {check.name} …", flush=True, file=sys.stderr)
-        result = run_check(check, ROOT, catalog)
+        if autofix:
+            first, result = run_with_autofix(check, ROOT, catalog)
+            if result.autofixed:
+                fixed_first.append(first)
+        else:
+            result = run_check(check, ROOT, catalog)
         results.append(result)
         if not quiet:
-            extra = result.reason or ", ".join(result.mistakes)
+            extra = result.reason or ", ".join(result.mistakes) or ("autofixed" if result.autofixed else "")
             print(f"  {ICON[result.status]} {check.name} ({result.duration_s:.1f}s)"
                   + (f" — {extra}" if extra else ""), flush=True, file=sys.stderr)
     if record and results:
         ledger = Ledger.load(HARNESS / "ledger.json")
+        if fixed_first:  # the mistake still happened; record it before the corrected run
+            ledger.record_run(RunResult(fixed_first), now=now_iso(), label=f"{label} (before autofix)")
         ledger.record_run(RunResult(results), now=now_iso(), label=label)
         ledger.save()
         sync_docs(ROOT, ledger, catalog, settings["promote_after"])
@@ -61,7 +68,8 @@ def verify(fast: bool, changed: list[str] | None, only: set[str] | None, label: 
 def cmd_check(args) -> int:
     changed = relevant_changes() if args.changed else None
     only = set(args.only.split(",")) if args.only else None
-    results = verify(args.fast, changed, only, label=args.label or "check", record=not args.no_record)
+    results = verify(args.fast, changed, only, label=args.label or "check", record=not args.no_record,
+                     autofix=args.autofix)
     failed = [r for r in results if r.status == "fail"]
     if failed:
         print("\n" + build_fix_prompt(failed, load_catalog(HARNESS / "mistakes.json")))
@@ -92,6 +100,7 @@ def cmd_learn(args) -> int:
         existing = Mistake(args.id, args.title, args.rule, args.fix or "", [], [])
         catalog.append(existing)
     existing.patterns.extend(args.pattern or [])
+    existing.checks.extend(c for c in (args.check or []) if c not in existing.checks)
     if args.guard_glob and args.guard_regex:
         existing.guards.append(Guard(glob=args.guard_glob, regex=args.guard_regex))
     save_catalog(path, catalog)
@@ -114,7 +123,7 @@ def cmd_loop(args) -> int:
 
     def round_verify() -> list[CheckResult]:
         return verify(fast=False, changed=None if args.full else relevant_changes(), only=only,
-                      label=f"loop: {args.task[:40]}")
+                      label=f"loop: {args.task[:40]}", autofix=True)
 
     result = run_loop(args.task, agent, round_verify, catalog,
                       max_iter=args.max_iter or settings["max_iter"],
@@ -155,7 +164,7 @@ def cmd_hook_stop(_args) -> int:
     fp = _fingerprint(changed)
     if cache.get("fingerprint") == fp and cache.get("ok"):
         return 0
-    results = verify(fast=True, changed=changed, only=None, label="stop-hook", quiet=True)
+    results = verify(fast=True, changed=changed, only=None, label="stop-hook", quiet=True, autofix=True)
     failed = [r for r in results if r.status == "fail"]
     blocks = cache.get("blocks", 0) + 1 if failed else 0
     cache_path.write_text(json.dumps({"fingerprint": fp, "ok": not failed, "blocks": blocks}))
@@ -180,6 +189,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--only", help="comma separated check names or components")
     p.add_argument("--label", help="label recorded in the run history")
     p.add_argument("--no-record", action="store_true", help="do not update ledger/docs")
+    p.add_argument("--autofix", action="store_true", help="apply mechanical fixers (e.g. cargo fmt) and re-check")
     p.set_defaults(func=cmd_check)
 
     p = sub.add_parser("docs", help="re-render CLAUDE.md / self_improvement.md from the ledger")
@@ -191,6 +201,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--rule")
     p.add_argument("--fix")
     p.add_argument("--pattern", action="append")
+    p.add_argument("--check", action="append", help="limit patterns to these check names")
     p.add_argument("--guard-glob")
     p.add_argument("--guard-regex")
     p.set_defaults(func=cmd_learn)

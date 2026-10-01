@@ -28,6 +28,7 @@ name = "rust-fmt"
 component = "backend"
 paths = ["backend/"]
 cmd = ["cargo", "fmt", "--all", "--", "--check"]
+fix = ["cargo", "fmt", "--all"]
 cwd = "backend"
 requires = ["tool:cargo"]
 
