@@ -1,6 +1,20 @@
 {
   "mistakes": [
     {
+      "id": "NET-RATE-LIMIT",
+      "title": "Package registry rate-limited or flaked (environment, not code)",
+      "rule": "HTTP 429/5xx or connection resets from Maven Central / crates.io are environment flakes: the harness retries with backoff. Never change versions or code because of them.",
+      "fix": "Re-run; Gradle/cargo caches what already downloaded.",
+      "patterns": [
+        "Received status code 429",
+        "status code 50[234]",
+        "Connection reset",
+        "Read timed out",
+        "failed to get .* from crates\\.io"
+      ],
+      "transient": true
+    },
+    {
       "id": "MONEY-FLOAT",
       "title": "Money represented as floating point",
       "rule": "Money is always integer minor units (paise) in i64 (Rust) / Long (Kotlin). Never f32/f64/Float/Double for amounts, caps, totals or values; percentages are integer basis points.",

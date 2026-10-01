@@ -52,7 +52,7 @@ requires = ["tool:cargo"]
 name = "kotlin-core-test"
 component = "android-core"
 paths = ["android/core/", "android/build.gradle.kts", "android/settings.gradle.kts", "android/gradle/", "contracts/"]
-cmd = ["./gradlew", "--console=plain", "-q", ":core:check"]
+cmd = ["./gradlew", "--console=plain", ":core:check"]
 cwd = "android"
 requires = ["tool:java"]
 

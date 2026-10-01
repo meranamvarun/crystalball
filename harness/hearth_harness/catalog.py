@@ -27,6 +27,7 @@ class Mistake:
     patterns: list[str]
     guards: list[Guard]
     checks: list[str] = field(default_factory=list)  # empty = patterns apply to every check
+    transient: bool = False  # environment flake (e.g. HTTP 429): the harness retries instead of blaming code
 
 
 def load_catalog(path: Path) -> list[Mistake]:
@@ -41,6 +42,7 @@ def load_catalog(path: Path) -> list[Mistake]:
             patterns=item.get("patterns", []),
             guards=[Guard(**g) for g in item.get("guards", [])],
             checks=item.get("checks", []),
+            transient=item.get("transient", False),
         ))
     return catalog
 
@@ -51,6 +53,8 @@ def save_catalog(path: Path, catalog: list[Mistake]) -> None:
         item = {"id": m.id, "title": m.title, "rule": m.rule, "fix": m.fix, "patterns": m.patterns}
         if m.checks:
             item["checks"] = m.checks
+        if m.transient:
+            item["transient"] = True
         if m.guards:
             item["guards"] = [
                 {k: v for k, v in g.__dict__.items() if v not in (None, [])} for g in m.guards

@@ -161,3 +161,38 @@ class AutofixTest(unittest.TestCase):
         checks, _ = load_config(REPO_ROOT / "harness" / "checks.toml")
         fmt = next(c for c in checks if c.name == "rust-fmt")
         self.assertEqual(fmt.fix, ["cargo", "fmt", "--all"])
+
+
+class TransientRetryTest(unittest.TestCase):
+    def test_transient_failure_is_retried(self):
+        from hearth_harness.checks import run_with_autofix
+        with tempfile.TemporaryDirectory() as d:
+            counter = Path(d) / "n"
+            script = (f"import sys,pathlib; p=pathlib.Path({str(counter)!r}); n=int(p.read_text() if p.exists() else 0)+1; "
+                      "p.write_text(str(n)); print('Received status code 429') if n < 2 else None; sys.exit(0 if n >= 2 else 1)")
+            c = Check(name="g", component="g", paths=[], cwd=".", fast=True, requires=[],
+                      cmd=[sys.executable, "-c", script])
+            catalog = [Mistake("NET-RATE-LIMIT", "429", "retry", "", [r"status code 429"], [], transient=True)]
+            first, final = run_with_autofix(c, Path(d), catalog, retry_delay_s=0)
+            self.assertEqual(final.status, "pass")
+            self.assertEqual(counter.read_text(), "2")
+
+    def test_non_transient_failure_is_not_retried(self):
+        from hearth_harness.checks import run_with_autofix
+        with tempfile.TemporaryDirectory() as d:
+            counter = Path(d) / "n"
+            script = (f"import sys,pathlib; p=pathlib.Path({str(counter)!r}); n=int(p.read_text() if p.exists() else 0)+1; "
+                      "p.write_text(str(n)); sys.exit(1)")
+            c = Check(name="g", component="g", paths=[], cwd=".", fast=True, requires=[],
+                      cmd=[sys.executable, "-c", script])
+            run_with_autofix(c, Path(d), [], retry_delay_s=0)
+            self.assertEqual(counter.read_text(), "1")
+
+
+class CheckOutputTest(unittest.TestCase):
+    def test_no_check_silences_failure_details(self):
+        # `gradle -q` hides JUnit assertion messages, leaving the fix prompt with only "BUILD FAILED".
+        checks, _ = load_config(REPO_ROOT / "harness" / "checks.toml")
+        for c in checks:
+            self.assertNotIn("-q", c.cmd, c.name)
+            self.assertNotIn("--quiet", c.cmd, c.name)

@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .catalog import Guard, Mistake, load_catalog, save_catalog
-from .checks import changed_files, load_config, run_check, run_with_autofix, select_checks
+from .checks import changed_files, load_config, run_with_autofix, run_with_retry, select_checks
 from .docs import sync_docs
 from .ledger import CheckResult, Ledger, RunResult
 from .loop import build_fix_prompt, run_loop
@@ -47,7 +47,7 @@ def verify(fast: bool, changed: list[str] | None, only: set[str] | None, label: 
             if result.autofixed:
                 fixed_first.append(first)
         else:
-            result = run_check(check, ROOT, catalog)
+            result = run_with_retry(check, ROOT, catalog)
         results.append(result)
         if not quiet:
             extra = result.reason or ", ".join(result.mistakes) or ("autofixed" if result.autofixed else "")

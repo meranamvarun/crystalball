@@ -19,7 +19,9 @@ Architecture and data model: `docs/architecture.md`.
 ## The workflow (always)
 
 1. **Test first.** Write/extend a failing test (and a `contracts/` fixture when behaviour is shared)
-   before the implementation. Run it and see it fail for the right reason.
+   before the implementation. Run it and see it fail for the right reason — run the red phase
+   directly (`cargo test`, `./gradlew :core:test`) or with `hearth.py check --no-record` so an
+   intentional red is not logged as a mistake.
 2. Implement the smallest change that makes it pass.
 3. Verify with the harness: `python3 harness/hearth.py check --changed` (or `--only backend`, etc.).
    The Claude Code **Stop hook** runs the fast checks on your changes and blocks finishing while red.

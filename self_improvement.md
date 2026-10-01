@@ -30,6 +30,21 @@ Write one entry per non-obvious lesson: what went wrong, why, and the rule/guard
 
 <!-- Add newest lessons at the top. -->
 
+### 2026-10-01 · A check that hides its failure output can't drive self-correction
+- **What happened:** a deliberate mutation of `SmsParser` made the Kotlin contract test fail, but
+  `gradlew -q` swallowed the JUnit assertion, so the fix prompt would have said only "BUILD FAILED".
+- **Fix:** dropped `-q`; `test_no_check_silences_failure_details` forbids quiet flags in checks.
+  Also: mutation-test new contract suites once (break the code, watch the right case fail).
+
+### 2026-10-01 · Maven Central answered 429 Too Many Requests
+- **What happened:** Gradle's first dependency download was rate-limited (environment, not code).
+- **Teach:** catalog entries can be `transient`; `NET-RATE-LIMIT` makes the harness retry the
+  check with backoff (max 3) instead of sending an agent to "fix" versions.
+
+### 2026-10-01 · TDD red phase is not a mistake
+- Intentional red runs (tests written before code) are run directly with gradle/cargo or with
+  `hearth.py check --no-record`, so the ledger only counts genuine mistakes.
+
 ### 2026-10-01 · Mechanical mistakes should be self-corrected, not just reported
 - **What happened:** `RUST-FMT` recurred and was promoted into CLAUDE.md.
 - **Change:** checks can declare a `fix` command; `check --autofix`, the Stop hook and the
@@ -83,6 +98,8 @@ Write one entry per non-obvious lesson: what went wrong, why, and the rule/guard
 <!-- harness:history:start -->
 | When | Label | Result | Mistakes |
 |------|-------|--------|----------|
+| 2026-10-01T05:18:38Z | full: after kotlin core | ✅ green | - |
+| 2026-10-01T05:17:58Z | kotlin core: first implementation | ✅ green | - |
 | 2026-10-01T05:08:19Z | server: member reference validation | ✅ green | - |
 | 2026-10-01T05:08:19Z | server: member reference validation (before autofix) | ❌ red | RUST-FMT |
 | 2026-10-01T05:07:49Z | server: lint with autofix | ✅ green | - |

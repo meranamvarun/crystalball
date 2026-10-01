@@ -20,6 +20,7 @@
   "active": {
     "guards": [],
     "harness-tests": [],
+    "kotlin-core-test": [],
     "rust-clippy": [],
     "rust-fmt": [],
     "rust-test": []
@@ -148,6 +149,30 @@
         "rust-fmt": "pass",
         "rust-clippy": "pass",
         "rust-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:17:58Z",
+      "label": "kotlin core: first implementation",
+      "ok": true,
+      "checks": {
+        "kotlin-core-test": "pass"
+      },
+      "mistakes": []
+    },
+    {
+      "at": "2026-10-01T05:18:38Z",
+      "label": "full: after kotlin core",
+      "ok": true,
+      "checks": {
+        "guards": "pass",
+        "harness-tests": "pass",
+        "rust-fmt": "pass",
+        "rust-clippy": "pass",
+        "rust-test": "pass",
+        "kotlin-core-test": "pass",
+        "android-app": "skip"
       },
       "mistakes": []
     }

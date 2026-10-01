@@ -112,18 +112,35 @@ def run_check(check: Check, root: Path, catalog: list[Mistake], env: dict | None
                        output_tail=output[-TAIL_CHARS:], duration_s=duration)
 
 
-def run_with_autofix(check: Check, root: Path, catalog: list[Mistake],
-                     env: dict | None = None) -> tuple[CheckResult, CheckResult]:
-    """Run a check; if it fails and has a mechanical fixer, apply it and re-run.
+TRANSIENT_RETRIES = 3
+
+
+def run_with_retry(check: Check, root: Path, catalog: list[Mistake], env: dict | None = None,
+                   retry_delay_s: float = 10.0) -> CheckResult:
+    """Run a check, retrying with backoff while it fails only for catalogued transient reasons."""
+    transient = {m.id for m in catalog if m.transient}
+    result = run_check(check, root, catalog, env)
+    for attempt in range(1, TRANSIENT_RETRIES + 1):
+        if result.status != "fail" or not set(result.mistakes) & transient:
+            break
+        time.sleep(retry_delay_s * attempt)
+        result = run_check(check, root, catalog, env)
+    return result
+
+
+def run_with_autofix(check: Check, root: Path, catalog: list[Mistake], env: dict | None = None,
+                     retry_delay_s: float = 10.0) -> tuple[CheckResult, CheckResult]:
+    """Run a check (retrying transient flakes); if it fails and has a mechanical fixer, apply it
+    and re-run.
 
     Returns (first, final). The first failure is still worth recording: the mistake happened.
     """
-    first = run_check(check, root, catalog, env)
+    first = run_with_retry(check, root, catalog, env, retry_delay_s)
     if first.status != "fail" or not check.fix:
         return first, first
     subprocess.run(check.fix, cwd=Path(root) / check.cwd, env=dict(os.environ if env is None else env),
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=check.timeout_s)
-    final = run_check(check, root, catalog, env)
+    final = run_with_retry(check, root, catalog, env, retry_delay_s)
     final.autofixed = final.status == "pass"
     return first, final
 
